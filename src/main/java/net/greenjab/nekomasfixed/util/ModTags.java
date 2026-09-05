@@ -20,6 +20,7 @@ public class ModTags {
     public static final TagKey<Block> STAINED_GLASSES = TagKey.create(Registries.BLOCK, NekomasFixed.id("stained_glasses"));
     public static final TagKey<Block> STAINED_GLASS_PANES = TagKey.create(Registries.BLOCK, NekomasFixed.id("stained_glass_panes"));
     public static final TagKey<Block> GLAZED_TERRACOTTAS = TagKey.create(Registries.BLOCK, NekomasFixed.id("glazed_terracottas"));
+    public static final TagKey<Block> CAN_BECOME_POT_FACE = TagKey.create(Registries.BLOCK, NekomasFixed.id("can_become_pot_face"));
     public static final TagKey<Block> CONCRETES = TagKey.create(Registries.BLOCK, NekomasFixed.id("concretes"));
     public static final TagKey<Block> CONCRETE_POWDERS = TagKey.create(Registries.BLOCK, NekomasFixed.id("concrete_powders"));
     public static final TagKey<Block> SPOTTED_WOOLS = TagKey.create(Registries.BLOCK, NekomasFixed.id("spotted_wools"));

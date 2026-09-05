@@ -1,22 +1,23 @@
 package net.greenjab.nekomasfixed.registry.other;
 
 import com.mojang.serialization.Codec;
-import net.greenjab.nekomasfixed.registry.block.entity.PotMaps;
-import net.minecraft.ChatFormatting;
+import net.greenjab.nekomasfixed.registry.block.enums.SpriteFacing;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,23 @@ public record PotEngravingDecoration(Optional<Item> left, Optional<Item> right, 
         this(getItem(items, 0), getItem(items, 1), getItem(items, 2), getItem(items, 3));
     }
 
+    public PotEngravingDecoration removeEngraving(String side) {
+        String lower = side.toLowerCase();
+        return switch (lower) {
+            case "left"  -> new PotEngravingDecoration(Optional.empty(), this.right, this.back, this.front);
+            case "right" -> new PotEngravingDecoration(this.left, Optional.empty(), this.back, this.front);
+            case "back"  -> new PotEngravingDecoration(this.left, this.right, Optional.empty(), this.front);
+            case "front" -> new PotEngravingDecoration(this.left, this.right, this.back, Optional.empty());
+            default -> this;
+        };
+    }
 
+    public void dropItem(Level level, BlockPos pos, ItemStack stack){
+        if(stack.isEmpty())return;
+        ItemEntity entity = new ItemEntity(level, pos.getX()+0.2, pos.getY()+0.2, pos.getZ()+0.2, stack);
+
+        level.addFreshEntity(entity);
+    }
 
     public Item getRight(){
         return this.right.orElse(FALLBACK_CONSTANT);
@@ -94,6 +111,15 @@ public record PotEngravingDecoration(Optional<Item> left, Optional<Item> right, 
         }
         Item item = sherds.get(i);
         return Optional.ofNullable(item).filter(it -> it != Items.BRICK);
+    }
+
+    public Item getDecoration(SpriteFacing facing){
+        return switch (facing){
+            case FRONT -> this.getFront();
+            case BACK -> this.getBack();
+            case LEFT -> this.getLeft();
+            case RIGHT -> this.getRight();
+        };
     }
 
     @Override

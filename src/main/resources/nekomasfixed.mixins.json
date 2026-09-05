@@ -16,6 +16,7 @@
     "BlockItemMixin",
     "BlockMixin",
     "BlocksMixin",
+    "DecoratedPotRecipeMixin",
     "DefaultDispenseItemBehaviorMixin",
     "DolphinMixin",
     "DyeItemMixin",

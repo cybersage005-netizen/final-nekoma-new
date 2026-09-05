@@ -4,7 +4,9 @@ import net.greenjab.nekomasfixed.registries.SheetRegistry;
 import net.greenjab.nekomasfixed.registry.block.TerracottaDecoratedPotBlock;
 import net.greenjab.nekomasfixed.registry.block.entity.PotMaps;
 import net.greenjab.nekomasfixed.registry.block.entity.TerracottaDecoratedPotBlockEntity;
+import net.greenjab.nekomasfixed.registry.block.enums.SpriteFacing;
 import net.greenjab.nekomasfixed.registry.other.PotEngravingDecoration;
+import net.greenjab.nekomasfixed.registry.other.PotFaceDecoration;
 import net.greenjab.nekomasfixed.render.block.entity.state.TerracottaDecoratePotRenderState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.*;
@@ -16,8 +18,8 @@ import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
 import java.util.EnumSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -25,7 +27,6 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.blockentity.DecoratedPotRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -42,6 +43,7 @@ import net.minecraft.util.Util;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.DecoratedPotBlockEntity;
 import net.minecraft.world.level.block.entity.PotDecorations;
 import net.minecraft.world.phys.Vec3;
@@ -53,20 +55,14 @@ public class TerracottaDecoratedPotBlockEntityRenderer implements BlockEntityRen
 
     private static final Map<Direction, Transformation> TRANSFORMATIONS = Util.makeEnumMap(Direction.class, TerracottaDecoratedPotBlockEntityRenderer::createModelTransformation);
     public static final ModelLayerLocation CUSTOM_POT_SIDES = new ModelLayerLocation(Identifier.fromNamespaceAndPath("nekomasfixed", "custom_pot_sides"), "main");
+    private static final Identifier CUSTOM_POT = Identifier.fromNamespaceAndPath("nekomasfixed", "textures/atlas/custom_pot.png");
+    private static final Identifier TERRACOTTA_POT = Identifier.fromNamespaceAndPath("nekomasfixed", "textures/atlas/terracotta_decorated_pot.png");
+    private static final Identifier VANILLA_POT = Identifier.withDefaultNamespace("textures/atlas/decorated_pot.png");
 
     private final SpriteGetter customPotSprites;
-
-    private final ModelPart neck;
-    private final ModelPart frontSide;
-    private final ModelPart backSide;
-    private final ModelPart leftSide;
-    private final ModelPart rightSide;
-    private final ModelPart frontPane;
-    private final ModelPart leftPane;
-    private final ModelPart rightPane;
-    private final ModelPart backPane;
-    private final ModelPart top;
-    private final ModelPart bottom;
+    private final ModelPart neck, frontSide, backSide, leftSide, rightSide;
+    private final ModelPart frontPane, leftPane, rightPane, backPane;
+    private final ModelPart top, bottom;
 
     public TerracottaDecoratedPotBlockEntityRenderer(final BlockEntityRendererProvider.Context context) {
         this(context.entityModelSet(), context.sprites());
@@ -121,11 +117,10 @@ public class TerracottaDecoratedPotBlockEntityRenderer implements BlockEntityRen
         root.addOrReplaceChild("back", sidePlane, PartPose.offsetAndRotation(1.0F, 16.0F, 15.0F, (float)Math.PI, 0.0F, 0.0F));
         root.addOrReplaceChild("left", sidePlane, PartPose.offsetAndRotation(1.0F, 16.0F, 1.0F, 0.0F, (-(float)Math.PI / 2F), (float)Math.PI));
         root.addOrReplaceChild("right", sidePlane, PartPose.offsetAndRotation(15.0F, 16.0F, 15.0F, 0.0F, ((float)Math.PI / 2F), (float)Math.PI));
-        root.addOrReplaceChild("front_pane", sidePlane, PartPose.offsetAndRotation(14.9F, 16.0F, 1.1F, 0.0F, 0.0F, (float)Math.PI));
-        root.addOrReplaceChild("back_pane", sidePlane, PartPose.offsetAndRotation(1.0F, 16.0F, 14.9F, (float)Math.PI, 0.0F, 0.0F));
-        root.addOrReplaceChild("left_pane", sidePlane, PartPose.offsetAndRotation(1.1F, 16.0F, 1.0F, 0.0F, (-(float)Math.PI / 2F), (float)Math.PI));
-        root.addOrReplaceChild("right_pane", sidePlane, PartPose.offsetAndRotation(14.9F, 16.0F, 15.0F, 0.0F, ((float)Math.PI / 2F), (float)Math.PI));
-
+        root.addOrReplaceChild("front_pane", sidePlane, PartPose.offsetAndRotation(14.9F+0.1F, 16.0F, 1.0F, 0.0F, 0.0F, (float)Math.PI));
+        root.addOrReplaceChild("back_pane", sidePlane, PartPose.offsetAndRotation(1.0F, 16.0F, 14.9F+0.1F, (float)Math.PI, 0.0F, 0.0F));
+        root.addOrReplaceChild("left_pane", sidePlane, PartPose.offsetAndRotation(1.0F, 16.0F, 1.0F, 0.0F, (-(float)Math.PI / 2F), (float)Math.PI));
+        root.addOrReplaceChild("right_pane", sidePlane, PartPose.offsetAndRotation(14.9F + 0.1F, 16.0F, 15.0F, 0.0F, ((float)Math.PI / 2F), (float)Math.PI));
         return LayerDefinition.create(mesh, 16, 16);
     }
 
@@ -168,7 +163,6 @@ public class TerracottaDecoratedPotBlockEntityRenderer implements BlockEntityRen
         poseStack.mulPose(modelTransformation(state.direction));
         if (state.wobbleProgress >= 0.0F && state.wobbleProgress <= 1.0F) {
             if (state.wobbleStyle == DecoratedPotBlockEntity.WobbleStyle.POSITIVE) {
-                float amplitude = 0.015625F;
                 float deltaTime = state.wobbleProgress * (float) (Math.PI * 2);
                 float tiltX = -1.5F * (Mth.cos(deltaTime) + 0.5F) * Mth.sin(deltaTime / 2.0F);
                 poseStack.rotateAround(Axis.XP.rotation(tiltX * 0.015625F), 0.5F, 0.0F, 0.5F);
@@ -180,21 +174,20 @@ public class TerracottaDecoratedPotBlockEntityRenderer implements BlockEntityRen
                 poseStack.rotateAround(Axis.YP.rotation(turnAngle * linearDecayFactor), 0.5F, 0.0F, 0.5F);
             }
         }
-        this.submit(state, poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY,  0);
+        this.submit(state, poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
     }
 
-
-
-    public void submit(TerracottaDecoratePotRenderState state,final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final int lightCoords, final int overlayCoords,  final int outlineColor) {
+    public void submit(TerracottaDecoratePotRenderState state, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector,
+                       final int lightCoords, final int overlayCoords, final int outlineColor) {
 
         RenderType renderTypeBase = SheetRegistry.TERRACOTTA_DECORATED_POT_BASE.renderType(RenderTypes::entitySolid);
 
         SpriteId potBase = new SpriteId(
-                Identifier.fromNamespaceAndPath("nekomasfixed", "textures/atlas/terracotta_decorated_pot.png"),
-                Identifier.fromNamespaceAndPath("nekomasfixed", "entity/terracotta_decorated_pot/terracotta_decorated_pot_"+PotMaps.POT_FACE_TO_STRING_MAPPING.get(state.potFace.getSafeBlock())+PotMaps.SpritePart.BASE)
+                TERRACOTTA_POT,
+                Identifier.fromNamespaceAndPath("nekomasfixed", "entity/terracotta_decorated_pot/terracotta_decorated_pot_" +
+                        PotMaps.POT_FACE_TO_STRING_MAPPING.get(state.potFace.getSafeBlock()) + PotMaps.SpritePart.BASE)
         );
-
         TextureAtlasSprite spriteBase = this.customPotSprites.get(potBase);
 
         submitNodeCollector.submitModelPart(this.neck, poseStack, renderTypeBase, lightCoords, overlayCoords, spriteBase, -1, null, outlineColor);
@@ -202,85 +195,83 @@ public class TerracottaDecoratedPotBlockEntityRenderer implements BlockEntityRen
         submitNodeCollector.submitModelPart(this.bottom, poseStack, renderTypeBase, lightCoords, overlayCoords, spriteBase, -1, null, outlineColor);
 
         SpriteId potFace = new SpriteId(
-                Identifier.fromNamespaceAndPath("nekomasfixed", "textures/atlas/terracotta_decorated_pot.png"),
-                Identifier.fromNamespaceAndPath("nekomasfixed", "entity/terracotta_decorated_pot/terracotta_decorated_pot_"+PotMaps.POT_FACE_TO_STRING_MAPPING.get(state.potFace.getSafeBlock())+PotMaps.SpritePart.SIDE)
+                TERRACOTTA_POT,
+                Identifier.fromNamespaceAndPath("nekomasfixed", "entity/terracotta_decorated_pot/terracotta_decorated_pot_" +
+                        PotMaps.POT_FACE_TO_STRING_MAPPING.get(state.potFace.getSafeBlock()) + PotMaps.SpritePart.SIDE)
         );
-
         TextureAtlasSprite potSprite = this.customPotSprites.get(potFace);
 
-        SpriteId rightSprite = this.getSpriteForPotEngravings(state, SpriteFacing.RIGHT);
-        SpriteId leftSprite = this.getSpriteForPotEngravings(state, SpriteFacing.LEFT);
-        SpriteId frontSprite = this.getSpriteForPotEngravings(state, SpriteFacing.FRONT);
-        SpriteId backSprite = this.getSpriteForPotEngravings(state, SpriteFacing.BACK);
-
+        SpriteId frontSprite = getSpriteForSide(state, SpriteFacing.FRONT);
+        SpriteId backSprite  = getSpriteForSide(state, SpriteFacing.BACK);
+        SpriteId leftSprite  = getSpriteForSide(state, SpriteFacing.LEFT);
+        SpriteId rightSprite = getSpriteForSide(state, SpriteFacing.RIGHT);
 
         TextureAtlasSprite frontText = this.customPotSprites.get(frontSprite);
-        TextureAtlasSprite backText = this.customPotSprites.get(backSprite);
-        TextureAtlasSprite leftText = this.customPotSprites.get(leftSprite);
+        TextureAtlasSprite backText  = this.customPotSprites.get(backSprite);
+        TextureAtlasSprite leftText  = this.customPotSprites.get(leftSprite);
         TextureAtlasSprite rightText = this.customPotSprites.get(rightSprite);
 
-
-        if (frontText == null || leftText == null || backText == null || rightText == null) {
+        if (frontText == null || backText == null || leftText == null || rightText == null) {
             return;
         }
 
-
         submitNodeCollector.submitModelPart(this.leftPane, poseStack, potFace.renderType(RenderTypes::entityCutout), lightCoords, overlayCoords, potSprite, -1, null, outlineColor);
-        submitNodeCollector.submitModelPart(this.rightPane, poseStack,potFace.renderType(RenderTypes::entityCutout), lightCoords, overlayCoords, potSprite, -1, null, outlineColor);
+        submitNodeCollector.submitModelPart(this.rightPane, poseStack, potFace.renderType(RenderTypes::entityCutout), lightCoords, overlayCoords, potSprite, -1, null, outlineColor);
         submitNodeCollector.submitModelPart(this.backPane, poseStack, potFace.renderType(RenderTypes::entityCutout), lightCoords, overlayCoords, potSprite, -1, null, outlineColor);
         submitNodeCollector.submitModelPart(this.frontPane, poseStack, potFace.renderType(RenderTypes::entityCutout), lightCoords, overlayCoords, potSprite, -1, null, outlineColor);
 
-        submitNodeCollector.submitModelPart(this.frontSide, poseStack, frontSprite.renderType(RenderTypes::entityCutout), lightCoords, overlayCoords, frontText, -1, null, outlineColor);
-        submitNodeCollector.submitModelPart(this.backSide, poseStack, backSprite.renderType(RenderTypes::entityCutout), lightCoords, overlayCoords, backText, -1, null, outlineColor);
-        submitNodeCollector.submitModelPart(this.leftSide, poseStack, leftSprite.renderType(RenderTypes::entityCutout), lightCoords, overlayCoords, leftText, -1, null, outlineColor);
-        submitNodeCollector.submitModelPart(this.rightSide, poseStack, rightSprite.renderType(RenderTypes::entityCutout), lightCoords, overlayCoords, rightText, -1, null, outlineColor);
+        submitNodeCollector.submitModelPart(this.frontSide, poseStack, frontSprite.renderType(RenderTypes::entityTranslucent), lightCoords, overlayCoords, frontText, -1, null, outlineColor);
+        submitNodeCollector.submitModelPart(this.backSide,  poseStack, backSprite.renderType(RenderTypes::entityTranslucent),  lightCoords, overlayCoords, backText,  -1, null, outlineColor);
+        submitNodeCollector.submitModelPart(this.leftSide,  poseStack, leftSprite.renderType(RenderTypes::entityTranslucent),  lightCoords, overlayCoords, leftText,  -1, null, outlineColor);
+        submitNodeCollector.submitModelPart(this.rightSide, poseStack, rightSprite.renderType(RenderTypes::entityTranslucent), lightCoords, overlayCoords, rightText, -1, null, outlineColor);
     }
 
-    private SpriteId getSpriteForPotEngravings(TerracottaDecoratePotRenderState state, SpriteFacing facing) {
-        PotEngravingDecoration decorations = state.engravedDecorations;
-        return switch (facing) {
-            case FRONT -> decorations.getFront().equals(Items.AIR) ?
-                    new SpriteId(
-                            Identifier.withDefaultNamespace("textures/atlas/decorated_pot.png"),
-                            Identifier.withDefaultNamespace(getSideFaceString(state, facing))
-                    ) : new SpriteId(
-                    Identifier.fromNamespaceAndPath("nekomasfixed", "textures/atlas/custom_pot.png"),
-                    Identifier.fromNamespaceAndPath("nekomasfixed", "trims/entity/pot/" + PotMaps.getSherdTexture(state.decorations).get(facing.ordinal) + "_" + PotMaps.ITEM_TO_STRING_MAPPING.get(state.engravedDecorations.getFront()))
-            );
+    private SpriteId spriteForVanillaSherd(String sherdName) {
+        return new SpriteId(
+                VANILLA_POT,
+                Identifier.withDefaultNamespace("entity/decorated_pot/" + sherdName + "_pottery_pattern")
+        );
+    }
 
-            case BACK ->
-                    decorations.getBack().equals(Items.AIR) ? new SpriteId(
-                            Identifier.withDefaultNamespace("textures/atlas/decorated_pot.png"),
-                            Identifier.withDefaultNamespace(getSideFaceString(state, facing))) :
-                            new SpriteId(
-                                    Identifier.fromNamespaceAndPath("nekomasfixed", "textures/atlas/custom_pot.png"),
-                                    Identifier.fromNamespaceAndPath("nekomasfixed", "trims/entity/pot/" + PotMaps.getSherdTexture(state.decorations).get(facing.ordinal) + "_" + PotMaps.ITEM_TO_STRING_MAPPING.get(state.engravedDecorations.getBack())));
-            case LEFT ->
-                    decorations.getLeft().equals(Items.AIR) ?
-                            new SpriteId(
-                                    Identifier.withDefaultNamespace("textures/atlas/decorated_pot.png"),
-                                    Identifier.withDefaultNamespace(getSideFaceString(state, facing))) :
-                            new SpriteId(
-                                    Identifier.fromNamespaceAndPath("nekomasfixed", "textures/atlas/custom_pot.png"),
-                                    Identifier.fromNamespaceAndPath("nekomasfixed", "trims/entity/pot/" + PotMaps.getSherdTexture(state.decorations).get(facing.ordinal) + "_" + PotMaps.ITEM_TO_STRING_MAPPING.get(state.engravedDecorations.getLeft())));
-            case RIGHT ->
-                    decorations.getRight().equals(Items.AIR) ?
-                            new SpriteId(
-                                    Identifier.withDefaultNamespace("textures/atlas/decorated_pot.png"),
-                                    Identifier.withDefaultNamespace(getSideFaceString(state, facing))) :
-                            new SpriteId(
-                                    Identifier.fromNamespaceAndPath("nekomasfixed", "textures/atlas/custom_pot.png"),
-                                    Identifier.fromNamespaceAndPath("nekomasfixed", "trims/entity/pot/" + PotMaps.getSherdTexture(state.decorations).get(facing.ordinal) + "_" + PotMaps.ITEM_TO_STRING_MAPPING.get(state.engravedDecorations.getRight())));
+    private SpriteId spriteForCustomPot(String sherdName, Item engravedItem) {
+        String engravedName = PotMaps.ITEM_TO_STRING_MAPPING.get(engravedItem);
+        return new SpriteId(
+                CUSTOM_POT,
+                Identifier.fromNamespaceAndPath("nekomasfixed", "trims/entity/pot/" + sherdName + "_" + engravedName)
+        );
+    }
+
+    private SpriteId spriteForBlankSherd(String sherdName) {
+        return new SpriteId(
+                TERRACOTTA_POT,
+                Identifier.fromNamespaceAndPath("nekomasfixed", "entity/terracotta_decorated_pot/terracotta_decorated_pot_blank_" + sherdName + "_pottery_pattern")
+        );
+    }
+
+    private Item getEngravedItem(PotEngravingDecoration deco, SpriteFacing facing) {
+        return switch (facing) {
+            case FRONT -> deco.getFront();
+            case BACK  -> deco.getBack();
+            case LEFT  -> deco.getLeft();
+            case RIGHT -> deco.getRight();
         };
     }
 
+    private SpriteId getSpriteForSide(TerracottaDecoratePotRenderState state, SpriteFacing facing) {
+        PotDecorations decorations = state.decorations;
+        PotEngravingDecoration engravings = state.engravedDecorations;
+        String sherdName = PotMaps.getSherdTexture(decorations).get(facing.ordinal);
+        Item engravedItem = getEngravedItem(engravings, facing);
+        boolean isBricks = state.potFace.getSafeBlock() == Blocks.BRICKS;
 
-    private String getSideFaceString(TerracottaDecoratePotRenderState state, SpriteFacing facing){
-        String str = PotMaps.getSherdTexture(state.decorations).get(facing.ordinal);
-        if(str!= null && str.equals("blank")){
-            return "entity/decorated_pot/decorated_pot_side";
-        }else{
-            return "entity/decorated_pot/"+PotMaps.getSherdTexture(state.decorations).get(facing.ordinal)+"_pottery_pattern";
+        if (engravedItem == Items.AIR) {
+            if (isBricks) {
+                return spriteForVanillaSherd(sherdName);
+            } else {
+                return spriteForBlankSherd(sherdName);
+            }
+        } else {
+            return spriteForCustomPot(sherdName, engravedItem);
         }
     }
 
@@ -289,11 +280,5 @@ public class TerracottaDecoratedPotBlockEntityRenderer implements BlockEntityRen
         this.neck.getExtentsForGui(poseStack, output);
         this.top.getExtentsForGui(poseStack, output);
         this.bottom.getExtentsForGui(poseStack, output);
-    }
-
-    public enum SpriteFacing {
-        BACK(0), LEFT(1), RIGHT(2), FRONT(3);
-        int ordinal;
-        SpriteFacing(int ord) { this.ordinal = ord; }
     }
 }

@@ -28,13 +28,16 @@ public class TerracottaDecoratedPotSpecialRenderer implements SpecialModelRender
 
     @Override
     public void submit(@Nullable CombinedPotData data, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, int overlayCoords, boolean hasFoil, int outlineColor) {
-        if (data == null) return;
+        if (data == null) {
+            return;
+        }
+
         TerracottaDecoratePotRenderState state = new TerracottaDecoratePotRenderState();
         state.engravedDecorations = data.engraving().orElse(PotEngravingDecoration.EMPTY);
         state.potFace = data.face().orElse(PotFaceDecoration.FALLBACK_BRICKS);
         state.decorations = data.vanillaDecorations().orElse(PotDecorations.EMPTY);
 
-        this.decoratedPotRenderer.submit(state, poseStack, submitNodeCollector, lightCoords, overlayCoords,  outlineColor);
+        this.decoratedPotRenderer.submit(state, poseStack, submitNodeCollector, lightCoords, overlayCoords, outlineColor);
     }
 
     @Override
@@ -52,9 +55,12 @@ public class TerracottaDecoratedPotSpecialRenderer implements SpecialModelRender
             return null;
         }
 
-        return new CombinedPotData(Optional.of(vanilla), Optional.of(engraving), Optional.of(face));
+        return new CombinedPotData(
+                Optional.ofNullable(vanilla),
+                Optional.ofNullable(engraving),
+                Optional.ofNullable(face)
+        );
     }
-
 
     public record Unbaked() implements SpecialModelRenderer.Unbaked<CombinedPotData> {
         public static final MapCodec<TerracottaDecoratedPotSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(new TerracottaDecoratedPotSpecialRenderer.Unbaked());

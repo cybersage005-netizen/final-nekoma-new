@@ -2,6 +2,7 @@
 4e60b46a1610081371b7f4ec2dd74cc8e42b6c24 data/minecraft/tags/block/chains.json
 168bab13aadb88cf9eb95a278127ca851d860803 data/minecraft/tags/block/lanterns.json
 cc2df6c1fa06a20834ea62c9ae26adc62c893540 data/nekomasfixed/tags/block/can_be_dyed_with_brush.json
+b614937558171867d10a027fbc11bf3f0c5e3f05 data/nekomasfixed/tags/block/can_become_pot_face.json
 5d327ebedc30c5df3d1585f6e8d78052745d48d9 data/nekomasfixed/tags/block/concrete_powders.json
 2506dff323c1a71bab7c0ec4cbf10a9cab6f346b data/nekomasfixed/tags/block/concretes.json
 dc66709a9f7c6746fd97a3e465fc4656eb876b05 data/nekomasfixed/tags/block/dyed_brick_slabs.json

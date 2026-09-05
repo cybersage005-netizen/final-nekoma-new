@@ -52,3 +52,8 @@ accessible method net/minecraft/client/data/AtlasProvider guiSprites ()Ljava/uti
 accessible method net/minecraft/client/data/AtlasProvider noPrefixMapper (Ljava/lang/String;)Ljava/util/List;
 accessible method net/minecraft/client/data/AtlasProvider shieldPatterns ()Ljava/util/List;
 accessible method net/minecraft/client/data/AtlasProvider storeAtlas (Lnet/minecraft/data/CachedOutput;Lnet/minecraft/resources/Identifier;Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
+accessible method net/minecraft/world/item/crafting/DecoratedPotRecipe left (Lnet/minecraft/world/item/crafting/CraftingInput;)Lnet/minecraft/world/item/ItemStack;
+accessible method net/minecraft/world/item/crafting/DecoratedPotRecipe back (Lnet/minecraft/world/item/crafting/CraftingInput;)Lnet/minecraft/world/item/ItemStack;
+accessible method net/minecraft/world/item/crafting/DecoratedPotRecipe front (Lnet/minecraft/world/item/crafting/CraftingInput;)Lnet/minecraft/world/item/ItemStack;
+accessible method net/minecraft/world/item/crafting/DecoratedPotRecipe right (Lnet/minecraft/world/item/crafting/CraftingInput;)Lnet/minecraft/world/item/ItemStack;
+accessible field net/minecraft/world/item/crafting/DecoratedPotRecipe result Lnet/minecraft/world/item/ItemStackTemplate;

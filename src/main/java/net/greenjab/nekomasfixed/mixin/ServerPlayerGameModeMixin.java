@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.greenjab.nekomasfixed.registry.block.TerracottaDecoratedPotBlock;
 import net.greenjab.nekomasfixed.registry.block.entity.TerracottaDecoratedPotBlockEntity;
 import net.greenjab.nekomasfixed.registry.other.PotEngravingDecoration;
+import net.greenjab.nekomasfixed.registry.other.PotFaceDecoration;
 import net.greenjab.nekomasfixed.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,11 +12,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.PotDecorations;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Objects;
+import java.util.Optional;
 
 @Mixin(ServerPlayerGameMode.class)
 public class ServerPlayerGameModeMixin {
@@ -36,13 +39,76 @@ public class ServerPlayerGameModeMixin {
         BlockPos pos = blockHitResult.getBlockPos();
         BlockState state = level.getBlockState(pos);
 
+        if (stack.is(Items.SHEARS) && player.isCrouching() && !stack.isEmpty()
+                && level.getBlockEntity(pos) instanceof TerracottaDecoratedPotBlockEntity decoratedPot
+                && !TerracottaDecoratedPotBlock.isEmptySide(hitDir, decoratedPot, state)) {
+            PotEngravingDecoration engraved = decoratedPot.getEngravingDecorations();
+            Direction facing = state.getValue(TerracottaDecoratedPotBlock.HORIZONTAL_FACING);
+            String hitSide = TerracottaDecoratedPotBlock.getSideNameFromHit(hitDir, facing);
+
+            Optional<Item> itemToDrop = switch (hitSide) {
+                case "front" -> engraved.front();
+                case "back" -> engraved.back();
+                case "left" -> engraved.left();
+                case "right" -> engraved.right();
+                default -> Optional.empty();
+            };
+
+            if (itemToDrop.isPresent() && itemToDrop.get() != Items.AIR) {
+                PotEngravingDecoration newEngraved = engraved.removeEngraving(hitSide);
+                decoratedPot.engravingDecorations = newEngraved;
+                ItemStack dropStack = itemToDrop.get().getDefaultInstance();
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, dropStack));
+                stack.setDamageValue(stack.getDamageValue() - 1);
+                decoratedPot.setChanged();
+                level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+
+                if (level.isClientSide()) {
+                    player.swing(player.getUsedItemHand(), true);
+                }
+                info.setReturnValue(InteractionResult.SUCCESS);
+                info.cancel();
+                return;
+            }
+        }
+
+        if (stack.getItem() instanceof BlockItem blockItem && player.isCrouching()
+                && blockItem.getBlock().defaultBlockState().is(ModTags.CAN_BECOME_POT_FACE)
+                && !stack.isEmpty()
+                && level.getBlockEntity(pos) instanceof TerracottaDecoratedPotBlockEntity decoratedPot) {
+            PotFaceDecoration newFaceDecoration = new PotFaceDecoration(Optional.of(blockItem.getBlock().defaultBlockState()));
+            if (!decoratedPot.getPotFace().equals(newFaceDecoration)) {
+                ItemStack oldFaceStack = decoratedPot.getPotFace().getSafeBlock().asItem().getDefaultInstance();
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, oldFaceStack));
+                decoratedPot.faceDecoration = newFaceDecoration;
+                decoratedPot.setChanged();
+                level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+                stack.shrink(1);
+
+                if (level.isClientSide()) {
+                    player.swing(player.getUsedItemHand(), true);
+                }
+                info.setReturnValue(InteractionResult.SUCCESS);
+                info.cancel();
+                return;
+            }
+        }
+
         if (stack.is(ModTags.CAN_BE_ENGRAVED) && !stack.isEmpty()
                 && level.getBlockEntity(pos) instanceof TerracottaDecoratedPotBlockEntity decoratedPot
-                && !this.isEmptySide(hitDir, decoratedPot, state) && !stack.equals(Objects.requireNonNull(decoratedPot.getEngravingDecorations().getItemEngravedAt(hitDir, state.getValue(TerracottaDecoratedPotBlock.HORIZONTAL_FACING))).getDefaultInstance())) {
+                && !TerracottaDecoratedPotBlock.isEmptySide(hitDir, decoratedPot, state)) {
+
+            Direction facing = state.getValue(TerracottaDecoratedPotBlock.HORIZONTAL_FACING);
+            Item engravedItem = decoratedPot.getEngravingDecorations().getItemEngravedAt(hitDir, facing);
+
+            if (engravedItem != Items.AIR && engravedItem == stack.getItem()) {
+                info.setReturnValue(InteractionResult.FAIL);
+                info.cancel();
+                return;
+            }
 
             if (hitDir.getAxis().isHorizontal() && player.isCrouching()) {
-                PotEngravingDecoration newDeco = decoratedPot.getEngravingDecorations()
-                        .engraveSideFacing(hitDir, state.getValue(TerracottaDecoratedPotBlock.HORIZONTAL_FACING), stack.getItem());
+                PotEngravingDecoration newDeco = decoratedPot.getEngravingDecorations().engraveSideFacing(hitDir, facing, stack.getItem());
                 decoratedPot.engravingDecorations = newDeco;
                 decoratedPot.setChanged();
                 level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
@@ -57,64 +123,10 @@ public class ServerPlayerGameModeMixin {
                 return;
             }
         }
+
         if (result != InteractionResult.PASS) {
             info.setReturnValue(result);
             info.cancel();
         }
-    }
-
-
-    private boolean isEmptySide(Direction ofHit, TerracottaDecoratedPotBlockEntity blockEntity, BlockState state) {
-        Direction potFacing = state.getValue(TerracottaDecoratedPotBlock.HORIZONTAL_FACING);
-        String sideName = getSideNameFromHit(ofHit, potFacing);
-        PotEngravingDecoration decorations = blockEntity.getEngravingDecorations();
-
-        if (sideName == null) return true;
-        return isSideEmpty(blockEntity.getDecorations(), sideName);
-    }
-
-    private static String getSideNameFromHit(Direction hitFace, Direction potFacing) {
-        if (hitFace.getAxis().isVertical()) {
-            return null;
-        }
-        switch (potFacing) {
-            case NORTH:
-                if (hitFace == Direction.NORTH) return "front";
-                if (hitFace == Direction.SOUTH) return "back";
-                if (hitFace == Direction.WEST)  return "left";
-                if (hitFace == Direction.EAST)  return "right";
-                break;
-            case SOUTH:
-                if (hitFace == Direction.SOUTH) return "front";
-                if (hitFace == Direction.NORTH) return "back";
-                if (hitFace == Direction.EAST)  return "left";
-                if (hitFace == Direction.WEST)  return "right";
-                break;
-            case EAST:
-                if (hitFace == Direction.EAST)  return "front";
-                if (hitFace == Direction.WEST)  return "back";
-                if (hitFace == Direction.NORTH) return "left";
-                if (hitFace == Direction.SOUTH) return "right";
-                break;
-            case WEST:
-                if (hitFace == Direction.WEST)  return "front";
-                if (hitFace == Direction.EAST)  return "back";
-                if (hitFace == Direction.SOUTH) return "left";
-                if (hitFace == Direction.NORTH) return "right";
-                break;
-            default: break;
-        }
-        return null;
-    }
-
-    private static boolean isSideEmpty(PotDecorations decorations, String side) {
-        if (decorations == null || side == null) return true;
-        return switch (side.toLowerCase()) {
-            case "back"  -> decorations.back().isEmpty();
-            case "left"  -> decorations.left().isEmpty();
-            case "right" -> decorations.right().isEmpty();
-            case "front" -> decorations.front().isEmpty();
-            default -> true;
-        };
     }
 }

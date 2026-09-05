@@ -1,10 +1,9 @@
 package net.greenjab.nekomasfixed.mixin;
 
 import net.greenjab.nekomasfixed.registry.block.entity.PotMaps;
-import net.greenjab.nekomasfixed.registry.block.entity.TerracottaDecoratedPotBlockEntity;
+import net.greenjab.nekomasfixed.registry.block.enums.SpriteFacing;
 import net.greenjab.nekomasfixed.registry.other.PotEngravingDecoration;
 import net.greenjab.nekomasfixed.registry.registries.ComponentRegistry;
-import net.greenjab.nekomasfixed.util.SpriteFacing;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.chat.CommonComponents;
@@ -15,14 +14,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.entity.PotDecorations;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.function.Consumer;
 

@@ -19,6 +19,7 @@ public class PotMaps {
     public static Map<Item, String> SHERD_TO_STRING_MAPPING = new HashMap<>();
     public static Map<Block, String> POT_FACE_TO_STRING_MAPPING = new HashMap<>();
     public static Map<Item, Integer> ITEM_TO_CHAT_FORMATTING_MAPPING = new HashMap<>();
+    public static Map<Block, Integer> POT_FACE_TO_COLOR_MAPPING = new HashMap<>();
 
     public static void register(){
         ITEM_TO_STRING_MAPPING.put(Items.IRON_INGOT, "iron");
@@ -34,6 +35,11 @@ public class PotMaps {
         ITEM_TO_STRING_MAPPING.put(Items.EMERALD, "emerald");
 
         SHERD_TO_STRING_MAPPING.put(Items.BLADE_POTTERY_SHERD, "blade");
+        SHERD_TO_STRING_MAPPING.put(Items.MOURNER_POTTERY_SHERD, "mourner");
+        SHERD_TO_STRING_MAPPING.put(Items.MINER_POTTERY_SHERD, "miner");
+        SHERD_TO_STRING_MAPPING.put(Items.PRIZE_POTTERY_SHERD, "prize");
+        SHERD_TO_STRING_MAPPING.put(Items.SCRAPE_POTTERY_SHERD, "scrape");
+        SHERD_TO_STRING_MAPPING.put(Items.PLENTY_POTTERY_SHERD, "plenty");
         SHERD_TO_STRING_MAPPING.put(Items.BRICK, "blank"); //fallback
 
         POT_FACE_TO_STRING_MAPPING.put(Blocks.GLAZED_TERRACOTTA.pick(DyeColor.LIGHT_BLUE), "light_blue");
@@ -51,6 +57,14 @@ public class PotMaps {
         ITEM_TO_CHAT_FORMATTING_MAPPING.put(Items.LAPIS_LAZULI,4288151);
         ITEM_TO_CHAT_FORMATTING_MAPPING.put(Items.QUARTZ, 14931140);
         ITEM_TO_CHAT_FORMATTING_MAPPING.put(Items.EMERALD, 1155126);
+
+        POT_FACE_TO_COLOR_MAPPING.put(Blocks.BRICKS, 8735009);
+
+        for(DyeColor color : DyeColor.values()){
+            POT_FACE_TO_COLOR_MAPPING.put(Blocks.GLAZED_TERRACOTTA.pick(color), color.getTextColor());
+            System.out.println(color);
+            POT_FACE_TO_COLOR_MAPPING.put(Blocks.DYED_TERRACOTTA.pick(color), color.getTextColor());
+        }
     }
 
     public static List<String> getSherdTexture(PotDecorations decorations) {

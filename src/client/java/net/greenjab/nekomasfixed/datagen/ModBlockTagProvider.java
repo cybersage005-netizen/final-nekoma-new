@@ -32,6 +32,7 @@ public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
         BlockDyeMap.STAINED_GLASS_PANE.values().forEach(b->tag(ModTags.STAINED_GLASS_PANES).add(b.properties().blockId()));
 
         BlockDyeMap.GLAZED_TERRACOTTA.values().forEach(b->tag(ModTags.GLAZED_TERRACOTTAS).add(b.properties().blockId()));
+        BlockDyeMap.TERRACOTTA.values().forEach(b->tag(ModTags.CAN_BECOME_POT_FACE).add(b.properties().blockId()));
 
         BlockDyeMap.CONCRETE.values().forEach(b->tag(ModTags.CONCRETES).add(b.properties().blockId()));
         BlockDyeMap.CONCRETE_POWDER.values().forEach(b->tag(ModTags.CONCRETE_POWDERS).add(b.properties().blockId()));
@@ -49,6 +50,12 @@ public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
                 .add(Blocks.CHISELED_SULFUR.properties().blockId())
                 .add(Blocks.POTENT_SULFUR.properties().blockId())
                 .add(Blocks.POLISHED_SULFUR.properties().blockId());
+
+        tag(ModTags.CAN_BECOME_POT_FACE)
+                .addTag(ModTags.GLAZED_TERRACOTTAS)
+                .add(Blocks.BRICKS.properties().blockId())
+        ;
+
 
         tag(BlockTags.LANTERNS)
                 .add(BlockRegistry.SULFUR_LANTERN.properties().blockId());

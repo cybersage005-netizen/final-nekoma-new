@@ -46,8 +46,6 @@ public class NekomasFixedClient implements ClientModInitializer {
 		MenuScreens.register(ScreenHandlerRegistry.PYROTECHNICS, PyrotechnicsTableScreen::new);
 
 		BlockColorRegistry.register(List.of(soup()), BlockRegistry.SOUP_CAULDRON);
-		SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath("nekomasfixed", "terracotta_decorated_pot"),
-				TerracottaDecoratedPotSpecialRenderer.Unbaked.MAP_CODEC);
 
 
 	}

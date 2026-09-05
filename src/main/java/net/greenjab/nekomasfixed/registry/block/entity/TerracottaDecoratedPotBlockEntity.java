@@ -1,9 +1,11 @@
 package net.greenjab.nekomasfixed.registry.block.entity;
 
+import net.greenjab.nekomasfixed.registry.block.TerracottaDecoratedPotBlock;
 import net.greenjab.nekomasfixed.registry.other.PotEngravingDecoration;
 import net.greenjab.nekomasfixed.registry.other.PotFaceDecoration;
 import net.greenjab.nekomasfixed.registry.registries.BlockEntityTypeRegistry;
 import net.greenjab.nekomasfixed.registry.registries.ComponentRegistry;
+import net.greenjab.nekomasfixed.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -15,11 +17,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.RandomizableContainer;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.crafting.DecoratedPotRecipe;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DecoratedPotBlock;
 import net.minecraft.world.level.block.entity.*;
@@ -55,7 +59,26 @@ public class TerracottaDecoratedPotBlockEntity extends BlockEntity implements Co
     protected @Nullable ResourceKey<LootTable> lootTable;
     protected long lootTableSeed;
 
+    public boolean canInteract(ItemStack stack, Direction hitDir) {
+        if (stack.isEmpty()) return false;
 
+        if (stack.is(ModTags.CAN_BE_ENGRAVED)) {
+            String sideName = TerracottaDecoratedPotBlock.getSideNameFromHit(hitDir, getDirection());
+            if (sideName == null) return false;
+            return !TerracottaDecoratedPotBlock.isSideEmpty(getDecorations(), sideName);
+        }
+
+        if (stack.getItem() instanceof BlockItem blockItem) {
+            Block block = blockItem.getBlock();
+            BlockState state = block.defaultBlockState();
+            if (state.is(ModTags.GLAZED_TERRACOTTAS) || state.is(Blocks.BRICKS)) {
+                Block currentFace = this.faceDecoration != null ? this.faceDecoration.getSafeBlock() : Blocks.BRICKS;
+                return block != currentFace;
+            }
+        }
+
+        return false;
+    }
 
     @Override
     protected void saveAdditional(final ValueOutput output) {

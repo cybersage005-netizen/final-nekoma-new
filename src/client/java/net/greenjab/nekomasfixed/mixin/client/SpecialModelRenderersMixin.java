@@ -2,6 +2,7 @@ package net.greenjab.nekomasfixed.mixin.client;
 
 import net.greenjab.nekomasfixed.NekomasFixed;
 import net.greenjab.nekomasfixed.registry.block.TerracottaDecoratedPotBlock;
+import net.greenjab.nekomasfixed.render.block.item.TerracottaDecoratedPotSpecialRenderer;
 import net.greenjab.nekomasfixed.render.entity.WildfireShieldModelRenderer;
 import net.greenjab.nekomasfixed.render.entity.WildfireTridentModelRenderer;
 import net.minecraft.client.model.geom.LayerDefinitions;
@@ -21,7 +22,6 @@ public abstract class SpecialModelRenderersMixin {
     private static void specialRendering(CallbackInfo ci) {
         ID_MAPPER.put(NekomasFixed.id("wildfire_trident"), WildfireTridentModelRenderer.Unbaked.CODEC);
         ID_MAPPER.put(NekomasFixed.id("wildfire_shield"), WildfireShieldModelRenderer.Unbaked.CODEC);
-//        ID_MAPPER.put(NekomasFixed.id("decorated_pot"), TerracottaDecoratedPotBlockEntityRenderer.Unbaked.MAP_CODEC);
-
+        ID_MAPPER.put(NekomasFixed.id("terracotta_decorated_pot"), TerracottaDecoratedPotSpecialRenderer.Unbaked.MAP_CODEC);
     }
 }
