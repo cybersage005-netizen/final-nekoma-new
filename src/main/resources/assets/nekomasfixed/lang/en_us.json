@@ -9,8 +9,7 @@
   "block.nekomasfixed.clam_purple": "Purple Clam",
   "block.nekomasfixed.pearl_block": "Pearl Block",
   "item.nekomasfixed.pearl": "Pearl",
-  "block.nekomasfixed.sulfur_lantern": "Sulfur Lantern",
-  "block.nekomasfixed.gold_chain": "Golden Chain",
+
 
   "tipped_arrow_custom.contains": "Contains",
   "tipped_arrow_custom.potion_content": "%s",
@@ -24,7 +23,11 @@
 
   "block.nekomasfixed.glistering_melon": "Glistering Melon",
   "block.nekomasfixed.geyser": "Geyser",
+
   "block.nekomasfixed.sulfur_torch": "Sulfur Torch",
+  "block.nekomasfixed.sulfur_campfire": "Sulfur Campfire",
+  "block.nekomasfixed.sulfur_lantern": "Sulfur Lantern",
+  "block.nekomasfixed.gold_chain": "Golden Chain",
 
   "block.nekomasfixed.kiln": "Kiln Apparatus",
   "container.nekomasfixed.kiln": "Kiln",
