@@ -16,6 +16,7 @@
     "BlockItemMixin",
     "BlockMixin",
     "BlocksMixin",
+    "CreativeModeTabsMixin",
     "DecoratedPotRecipeMixin",
     "DefaultDispenseItemBehaviorMixin",
     "DolphinMixin",

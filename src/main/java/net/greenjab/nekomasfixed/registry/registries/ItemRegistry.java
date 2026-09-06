@@ -5,6 +5,8 @@ import net.greenjab.nekomasfixed.registry.item.*;
 import net.greenjab.nekomasfixed.registry.item.quiver.QuiverContents;
 import net.greenjab.nekomasfixed.registry.item.quiver.QuiverItem;
 import net.greenjab.nekomasfixed.registry.other.AnimalComponent;
+import net.greenjab.nekomasfixed.registry.other.PotEngravingDecoration;
+import net.greenjab.nekomasfixed.registry.other.PotFaceDecoration;
 import net.greenjab.nekomasfixed.registry.other.TippedArrowCustomComponent;
 import net.greenjab.nekomasfixed.util.*;
 import net.minecraft.ChatFormatting;
@@ -52,6 +54,7 @@ import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.entity.PotDecorations;
 import net.minecraft.world.waypoints.Waypoint;
 import java.util.List;
 import java.util.Optional;
@@ -480,7 +483,11 @@ public class ItemRegistry {
     public static final Item AQUA_SPOTTED_CARPET = register(BlockRegistry.AQUA_SPOTTED_CARPET);
     public static final Item INDIGO_SPOTTED_CARPET = register(BlockRegistry.INDIGO_SPOTTED_CARPET);
     public static final Item MAROON_SPOTTED_CARPET = register(BlockRegistry.MAROON_SPOTTED_CARPET);
-    public static final Item TERRACOTTA_DECORATED_POT = register(BlockRegistry.TERRACOTTA_DECORATED_POT);
+    public static final Item TERRACOTTA_DECORATED_POT = register(BlockRegistry.TERRACOTTA_DECORATED_POT, BlockItem::new, new Item.Properties()
+            .component(ComponentRegistry.POT_ENGRAVED_DECORATIONS, PotEngravingDecoration.EMPTY)
+            .component(ComponentRegistry.POT_FACE_BLOCK, PotFaceDecoration.FALLBACK_BRICKS)
+            .component(DataComponents.POT_DECORATIONS, PotDecorations.EMPTY)
+    );
 
 //sulfur related
     public static final Item SULFUR_LANTERN =register(BlockRegistry.SULFUR_LANTERN);

@@ -227,6 +227,12 @@ public class TerracottaDecoratedPotBlockEntityRenderer implements BlockEntityRen
     }
 
     private SpriteId spriteForVanillaSherd(String sherdName) {
+        if(sherdName.equals("blank")){
+            return new SpriteId(
+                    VANILLA_POT,
+                    Identifier.withDefaultNamespace("entity/decorated_pot/decorated_pot_side")
+            );
+        }
         return new SpriteId(
                 VANILLA_POT,
                 Identifier.withDefaultNamespace("entity/decorated_pot/" + sherdName + "_pottery_pattern")
