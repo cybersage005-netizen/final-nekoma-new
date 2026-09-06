@@ -38,7 +38,9 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
 
         dropSelf(BlockRegistry.SULFUR_LANTERN);
         dropSelf(BlockRegistry.GOLD_CHAIN);
+        dropSelf(BlockRegistry.SULFUR_TORCH);
         add(BlockRegistry.TERRACOTTA_DECORATED_POT, this::createDecoratedPotTable);
+        createSilkTouchOnlyTable(BlockRegistry.SULFUR_CAMPFIRE);
 
 
     }

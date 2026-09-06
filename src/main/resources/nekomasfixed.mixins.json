@@ -16,6 +16,7 @@
     "BlockItemMixin",
     "BlockMixin",
     "BlocksMixin",
+    "CampfireBlockMixin",
     "CreativeModeTabsMixin",
     "DecoratedPotRecipeMixin",
     "DefaultDispenseItemBehaviorMixin",

@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.greenjab.nekomasfixed.registry.recipe.CustomTippedArrowRecipe;
+import net.greenjab.nekomasfixed.registry.registries.BlockRegistry;
 import net.greenjab.nekomasfixed.registry.registries.ItemRegistry;
 import net.greenjab.nekomasfixed.util.AllDyes;
 import net.greenjab.nekomasfixed.util.BlockDyeMap;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.DecoratedPotRecipe;
 import net.minecraft.world.item.crafting.FireworkRocketRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
 import org.jspecify.annotations.NonNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,18 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 shapeless(RecipeCategory.BUILDING_BLOCKS, ItemRegistry.BAOBAB_PLANKS, 4)
                         .requires(ModTags.BAOBAB_LOGS)
                         .unlockedBy(getHasName(ItemRegistry.BAOBAB_LOG), has(ItemRegistry.BAOBAB_LOG)).save(output);
+
+                shaped(RecipeCategory.DECORATIONS, BlockRegistry.SULFUR_CAMPFIRE)
+                        .define('L', ItemTags.LOGS)
+                        .define('S', Items.STICK)
+                        .define('C', Items.SULFUR)
+                        .pattern(" S ")
+                        .pattern("SCS")
+                        .pattern("LLL")
+                        .unlockedBy("has_stick", this.has(Items.STICK))
+                        .unlockedBy("has_sulfur", this.has(Items.SULFUR))
+                        .save(this.output);
+
 
                 shaped(RecipeCategory.BUILDING_BLOCKS, ItemRegistry.BAOBAB_WOOD, 3)
                         .pattern("##")
@@ -175,6 +189,15 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy(getHasName(Items.REDSTONE), has(Items.REDSTONE))
                         .unlockedBy(getHasName(Items.GOLD_INGOT), has(Items.GOLD_INGOT))
                         .unlockedBy(getHasName(Items.FLINT), has(Items.FLINT))
+                        .save(output);
+
+                shaped(RecipeCategory.DECORATIONS, ItemRegistry.SULFUR_TORCH, 4)
+                        .pattern("S")
+                        .pattern("T")
+                        .define('S', Items.SULFUR)
+                        .define('T', Items.STICK)
+                        .unlockedBy(getHasName(Items.SULFUR), has(Items.SULFUR))
+                        .unlockedBy(getHasName(Items.STICK), has(Items.STICK))
                         .save(output);
 
             }

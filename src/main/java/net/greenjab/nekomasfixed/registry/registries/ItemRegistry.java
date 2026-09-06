@@ -18,6 +18,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
@@ -53,7 +54,9 @@ import net.minecraft.world.item.equipment.ArmorMaterials;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.entity.PotDecorations;
 import net.minecraft.world.waypoints.Waypoint;
 import java.util.List;
@@ -491,12 +494,14 @@ public class ItemRegistry {
 
 //sulfur related
     public static final Item SULFUR_LANTERN =register(BlockRegistry.SULFUR_LANTERN);
+    public static final Item SULFUR_CAMPFIRE =register(BlockRegistry.SULFUR_CAMPFIRE);
     public static final Item GOLD_CHAIN =register(BlockRegistry.GOLD_CHAIN);
+    public static final Item SULFUR_TORCH = register(BlockRegistry.SULFUR_TORCH, ((block, settings) ->
+            new StandingAndWallBlockItem(block, BlockRegistry.WALL_SULFUR_TORCH, Direction.DOWN, settings)));
     public static final Item TIPPED_ARROW_CUSTOM = register("tipped_arrow_custom", CustomArrowItem::new, (new Item.Properties()).stacksTo(64).component(ComponentRegistry.TIPPED_POTION_CONTENTS, TippedArrowCustomComponent.EMPTY));
 
     public static final Item QUIVER =register("quiver", QuiverItem::new, (new Item.Properties()).stacksTo(1).component(ComponentRegistry.QUIVER_CONTENTS, QuiverContents.EMPTY));
     public static final Item GOAT_HORN_HELMET = register("goat_horn_helmet", new Item.Properties().humanoidArmor(OtherRegistry.GOAT_HORN, ArmorType.HELMET));
-
 
 
 

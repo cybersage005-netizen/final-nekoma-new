@@ -10,6 +10,7 @@ import net.greenjab.nekomasfixed.registry.block.enums.NautilusBlockType;
 import net.greenjab.nekomasfixed.registry.worldgen.ModConfiguredFeatures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 
@@ -32,8 +33,7 @@ import net.minecraft.world.level.material.PushReaction;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static net.minecraft.world.level.block.Blocks.buttonProperties;
-import static net.minecraft.world.level.block.Blocks.leavesProperties;
+import static net.minecraft.world.level.block.Blocks.*;
 
 public class BlockRegistry {
 
@@ -453,6 +453,18 @@ public class BlockRegistry {
     ///  SULFUR RELATED STUFF
     public static final Block SULFUR_FIRE = register("sulfur_fire", SulfurFireBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).replaceable().noCollision().instabreak().lightLevel((statex) -> 10).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
     public static final Block SULFUR_LANTERN = register("sulfur_lantern", LanternBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.METAL).forceSolidOn().strength(3.5F).sound(SoundType.LANTERN).lightLevel((statex) -> 10).noOcclusion().pushReaction(PushReaction.DESTROY));
+    public static final Block SULFUR_CAMPFIRE = register("sulfur_campfire", (prop)->new CampfireBlock(false,2,prop), BlockBehaviour.Properties.of().mapColor(MapColor.PODZOL).instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.SULFUR).lightLevel(litBlockEmission(10)).noOcclusion().ignitedByLava());
+    public static final Block SULFUR_TORCH = register("sulfur_torch", (prop)->new TorchBlock(ParticleTypes.NOXIOUS_GAS,prop),BlockBehaviour.Properties.of()
+            .noCollision()
+            .instabreak()
+            .lightLevel(/* lambda$static$64 */ statex -> 14)
+            .sound(SoundType.WOOD)
+            .pushReaction(PushReaction.DESTROY));
+
+    public static final Block WALL_SULFUR_TORCH= register("wall_sulfur_torch",
+            p -> new WallTorchBlock(ParticleTypes.NOXIOUS_GAS, p),
+            wallVariant(SULFUR_TORCH, true).noCollision().instabreak().lightLevel(/* lambda$static$66 */ statex -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)
+    );
     public static final Block GOLD_CHAIN = register("gold_chain", ChainBlock::new, BlockBehaviour.Properties.of().forceSolidOn().requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion());
     public static final Block TERRACOTTA_DECORATED_POT = register("terracotta_decorated_pot", TerracottaDecoratedPotBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_RED).strength(0.0F, 0.0F).pushReaction(PushReaction.DESTROY).noOcclusion());
 

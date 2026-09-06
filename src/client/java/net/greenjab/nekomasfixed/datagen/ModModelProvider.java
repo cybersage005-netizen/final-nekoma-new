@@ -14,6 +14,7 @@ import net.greenjab.nekomasfixed.render.block.item.TerracottaDecoratedPotSpecial
 import net.greenjab.nekomasfixed.util.QuiverComponentChangeProperty;
 import net.greenjab.nekomasfixed.util.QuiverListState;
 import net.minecraft.client.data.*;
+
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.MultiVariant;
@@ -140,6 +141,8 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.
                 generateSimpleSpecialItemModel(BlockRegistry.TERRACOTTA_DECORATED_POT, Optional.empty(), new TerracottaDecoratedPotSpecialRenderer.Unbaked());
 
+        blockStateModelGenerator.createCampfires(BlockRegistry.SULFUR_CAMPFIRE);
+        blockStateModelGenerator.createNormalTorch(BlockRegistry.SULFUR_TORCH, BlockRegistry.WALL_SULFUR_TORCH);
 
     }
 

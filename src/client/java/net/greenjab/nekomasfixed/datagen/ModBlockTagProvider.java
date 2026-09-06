@@ -1,5 +1,6 @@
 package net.greenjab.nekomasfixed.datagen;
 
+import com.terraformersmc.modmenu.util.mod.Mod;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.greenjab.nekomasfixed.registry.registries.BlockRegistry;
@@ -44,6 +45,9 @@ public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
 
         BlockDyeMap.FROGLIGHT.values().forEach(b->tag(ModTags.FROGLIGHTS).add(b.properties().blockId()));
 
+        tag(BlockTags.CAMPFIRES)
+                .add(BlockRegistry.SULFUR_CAMPFIRE.properties().blockId());
+
         tag(ModTags.SULFUR_BLOCKS)
                 .add(Blocks.SULFUR.properties().blockId())
                 .add(Blocks.SULFUR_BRICKS.properties().blockId())
@@ -53,8 +57,7 @@ public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
 
         tag(ModTags.CAN_BECOME_POT_FACE)
                 .addTag(ModTags.GLAZED_TERRACOTTAS)
-                .add(Blocks.BRICKS.properties().blockId())
-        ;
+                .add(Blocks.BRICKS.properties().blockId());
 
 
         tag(BlockTags.LANTERNS)
@@ -72,7 +75,9 @@ public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
                 .add(Blocks.COPPER_TORCH.properties().blockId())
                 .add(Blocks.COPPER_WALL_TORCH.properties().blockId())
                 .add(BlockRegistry.GLOW_TORCH.properties().blockId())
-                .add(BlockRegistry.GLOW_WALL_TORCH.properties().blockId());
+                .add(BlockRegistry.GLOW_WALL_TORCH.properties().blockId())
+                .add(BlockRegistry.SULFUR_TORCH.properties().blockId())
+                .add(BlockRegistry.WALL_SULFUR_TORCH.properties().blockId());
 
         tag(ModTags.CAN_BE_DYED_WITH_BRUSH)
                 .addTag(ModTags.DYED_BRICKS)

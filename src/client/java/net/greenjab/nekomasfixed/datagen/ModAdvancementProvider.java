@@ -15,6 +15,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
         super(output, registryLookup);
     }
 
+
     @Override
     public void generateAdvancement(HolderLookup.@NonNull Provider wrapperLookup, @NonNull Consumer<AdvancementHolder> consumer) {
 
