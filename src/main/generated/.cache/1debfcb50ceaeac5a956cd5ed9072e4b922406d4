@@ -1,4 +1,5 @@
 // 26.2	-999999999-01-01T00:00:00	Nekomas Fixed Minecraft/Tags for minecraft:block
+d6feeb15afb94187b6c17c139bb676563d8fcb00 data/minecraft/tags/block/banners.json
 6d4e4842e7c4aedf0022d3cda8cd072f5e46175b data/minecraft/tags/block/campfires.json
 4e60b46a1610081371b7f4ec2dd74cc8e42b6c24 data/minecraft/tags/block/chains.json
 168bab13aadb88cf9eb95a278127ca851d860803 data/minecraft/tags/block/lanterns.json

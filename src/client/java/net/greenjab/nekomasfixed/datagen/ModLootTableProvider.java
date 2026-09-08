@@ -8,6 +8,7 @@ import net.greenjab.nekomasfixed.util.BlockDyeMap;
 import net.minecraft.advancements.predicates.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.data.loot.packs.VanillaEntityLoot;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DecoratedPotBlock;
@@ -39,6 +40,17 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
         dropSelf(BlockRegistry.SULFUR_LANTERN);
         dropSelf(BlockRegistry.GOLD_CHAIN);
         dropSelf(BlockRegistry.SULFUR_TORCH);
+
+        dropSelf(BlockRegistry.AMBER_BANNER);
+        dropSelf(BlockRegistry.MAROON_BANNER);
+        dropSelf(BlockRegistry.INDIGO_BANNER);
+        dropSelf(BlockRegistry.AQUA_BANNER);
+
+        dropSelf(BlockRegistry.AMBER_WALL_BANNER);
+        dropSelf(BlockRegistry.MAROON_WALL_BANNER);
+        dropSelf(BlockRegistry.INDIGO_WALL_BANNER);
+        dropSelf(BlockRegistry.AQUA_WALL_BANNER);
+
         add(BlockRegistry.TERRACOTTA_DECORATED_POT, this::createDecoratedPotTable);
         createSilkTouchOnlyTable(BlockRegistry.SULFUR_CAMPFIRE);
 

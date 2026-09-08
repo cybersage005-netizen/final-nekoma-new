@@ -96,6 +96,11 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy(getHasName(Items.GOLD_INGOT), has(Items.GOLD_INGOT))
                         .save(output);
 
+                createBannerRecipe(ItemRegistry.AMBER_BANNER, ItemRegistry.AMBER_WOOL).save(output);
+                createBannerRecipe(ItemRegistry.AQUA_BANNER, ItemRegistry.AQUA_WOOL).save(output);
+                createBannerRecipe(ItemRegistry.MAROON_BANNER, ItemRegistry.MAROON_WOOL).save(output);
+                createBannerRecipe(ItemRegistry.INDIGO_BANNER, ItemRegistry.INDIGO_WOOL).save(output);
+
                 woodenBoat(ItemRegistry.BAOBAB_BOAT, ItemRegistry.BAOBAB_PLANKS);
                 chestBoat(ItemRegistry.BAOBAB_CHEST_BOAT, ItemRegistry.BAOBAB_PLANKS);
                 shelf(ItemRegistry.BAOBAB_SHELF, ItemRegistry.STRIPPED_BAOBAB_LOG);
@@ -212,6 +217,18 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .group(group)
                         .unlockedBy(getHasName(outside), has(outside))
                         .unlockedBy(getHasName(inside), has(inside));
+            }
+
+            private ShapedRecipeBuilder createBannerRecipe(Item bannerItem, Item woolItem){
+               return shaped(RecipeCategory.DECORATIONS, bannerItem, 1)
+                        .pattern("###")
+                        .pattern("###")
+                        .pattern(" S ")
+                        .define('#', woolItem)
+                        .define('S', Items.STICK)
+                        .unlockedBy(getHasName(woolItem), has(woolItem))
+                        .unlockedBy(getHasName(Items.STICK), has(Items.STICK))
+                        ;
             }
         };
     }

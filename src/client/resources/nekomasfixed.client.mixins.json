@@ -31,6 +31,7 @@
   },
   "mixins": [
     "AtlasManagerMixin",
+    "BannerRendererMixin",
     "IllagerModelMixin"
   ]
 }

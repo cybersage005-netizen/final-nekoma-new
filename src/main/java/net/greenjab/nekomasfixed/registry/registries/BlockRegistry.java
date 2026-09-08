@@ -1,10 +1,12 @@
 package net.greenjab.nekomasfixed.registry.registries;
 
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
+import net.fabricmc.fabric.impl.client.renderer.VanillaBlockModelPartEncoder;
+import net.fabricmc.fabric.mixin.datagen.client.ModelProviderBlockStateGeneratorCollectorMixin;
 import net.greenjab.nekomasfixed.NekomasFixed;
+import net.greenjab.nekomasfixed.mixin.DyeColorMixin;
 import net.greenjab.nekomasfixed.registry.block.*;
 import net.greenjab.nekomasfixed.registry.block.cauldron.*;
-import net.greenjab.nekomasfixed.registry.block.entity.TerracottaDecoratedPotBlockEntity;
 import net.greenjab.nekomasfixed.registry.block.enums.ClamType;
 import net.greenjab.nekomasfixed.registry.block.enums.NautilusBlockType;
 import net.greenjab.nekomasfixed.registry.worldgen.ModConfiguredFeatures;
@@ -14,10 +16,13 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 
-import net.minecraft.references.BlockIds;
+import net.minecraft.references.BlockItemId;
+import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.inventory.LoomMenu;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.grower.TreeGrower;
@@ -30,13 +35,15 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 
 import static net.minecraft.world.level.block.Blocks.*;
 
 public class BlockRegistry {
-
 
     public static final Block CLAM = register("clam", settings -> new ClamBlock(ClamType.REGULAR, settings),
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(1F).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY));
@@ -468,6 +475,21 @@ public class BlockRegistry {
     public static final Block GOLD_CHAIN = register("gold_chain", ChainBlock::new, BlockBehaviour.Properties.of().forceSolidOn().requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion());
     public static final Block TERRACOTTA_DECORATED_POT = register("terracotta_decorated_pot", TerracottaDecoratedPotBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_RED).strength(0.0F, 0.0F).pushReaction(PushReaction.DESTROY).noOcclusion());
 
+   public static final Block AMBER_BANNER = registerBannerBlock("amber_banner", customDye("amber"));
+   public static final Block AQUA_BANNER = registerBannerBlock("aqua_banner",customDye("aqua"));
+   public static final Block MAROON_BANNER = registerBannerBlock("maroon_banner",customDye("maroon"));
+   public static final Block INDIGO_BANNER = registerBannerBlock("indigo_banner",customDye("indigo"));
+
+    public static final Block AMBER_WALL_BANNER = registerWallBannerBlock("amber_wall_banner",customDye("amber"));
+    public static final Block AQUA_WALL_BANNER = registerWallBannerBlock("aqua_wall_banner",customDye("aqua"));
+    public static final Block MAROON_WALL_BANNER = registerWallBannerBlock("maroon_wall_banner",customDye("maroon"));
+    public static final Block INDIGO_WALL_BANNER = registerWallBannerBlock("indigo_wall_banner",customDye("indigo"));
+
+    public static Block register(final BlockItemId id, final Function<BlockBehaviour.Properties, Block> factory, final BlockBehaviour.Properties properties) {
+        return register(id.block(), factory, properties);
+    }
+
+
 
     private static Block register(String id, BlockBehaviour.Properties settings) {
         return register(id, Block::new, settings);
@@ -490,6 +512,48 @@ public class BlockRegistry {
         return Registry.register(BuiltInRegistries.BLOCK, key, block);
     }
 
+    public static DyeColor customDye(String name) {
+        DyeColor[] dyes = DyeColor.values();
+
+        for(DyeColor color : dyes){
+            if(color.getName().contains(name.toLowerCase()))
+                return color;
+        }
+        return DyeColor.BLACK;
+
+    }
+
+    private static Block registerBannerBlock(String str, DyeColor color){
+        return register(str,
+                (prop)->(BannerBlock)new BannerBlock(color, prop),
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.WOOD)
+                        .forceSolidOn()
+                        .instrument(NoteBlockInstrument.BASS)
+                        .noCollision()
+                        .strength(1.0F)
+                        .sound(SoundType.WOOD)
+                        .ignitedByLava()
+        );
+    }
+
+    private static Block registerWallBannerBlock(String str, DyeColor color){
+        return register(str,
+                (prop)->(WallBannerBlock)new WallBannerBlock(color, prop),
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.WOOD)
+                        .forceSolidOn()
+                        .instrument(NoteBlockInstrument.BASS)
+                        .noCollision()
+                        .strength(1.0F)
+                        .sound(SoundType.WOOD)
+                        .ignitedByLava()
+        );
+    }
+
+
+
+
     public static BlockBehaviour.Properties createCandleSettings(MapColor mapColor) {
         return BlockBehaviour.Properties.of().mapColor(mapColor).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(CandleBlock.LIGHT_EMISSION).pushReaction(PushReaction.DESTROY);
     }
@@ -501,6 +565,8 @@ public class BlockRegistry {
 
         return settings;
     }
+
+
 
     private static Block registerStainedGlassBlock(String id, DyeColor color) {
         return register(id, (settings) -> new StainedGlassBlock(color, settings), BlockBehaviour.Properties.of().mapColor(color).instrument(NoteBlockInstrument.HAT).strength(0.3F).sound(SoundType.GLASS).noOcclusion().isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never));

@@ -2,9 +2,11 @@ package net.greenjab.nekomasfixed.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.greenjab.nekomasfixed.registry.registries.ItemRegistry;
 import net.greenjab.nekomasfixed.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import org.jspecify.annotations.NonNull;
@@ -31,6 +33,18 @@ public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
                 .add(getKey(Items.AMETHYST_SHARD))
                 .add(getKey(Items.EMERALD))
         ;
+
+        tag(ItemTags.LOOM_DYES)
+                .add(getKey(ItemRegistry.AMBER_DYE))
+                .add(getKey(ItemRegistry.AQUA_DYE))
+                .add(getKey(ItemRegistry.MAROON_DYE))
+                .add(getKey(ItemRegistry.INDIGO_DYE));
+
+        tag(ItemTags.DYES)
+                .add(getKey(ItemRegistry.AMBER_DYE))
+                .add(getKey(ItemRegistry.AQUA_DYE))
+                .add(getKey(ItemRegistry.MAROON_DYE))
+                .add(getKey(ItemRegistry.INDIGO_DYE));
     }
 
     private ResourceKey<Item> getKey(Item item){

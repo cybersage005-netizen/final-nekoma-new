@@ -1,43 +1,25 @@
 package net.greenjab.nekomasfixed.datagen;
 
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
-import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
-import net.fabricmc.fabric.impl.client.rendering.ArmorRendererRegistryImpl;
-import net.fabricmc.fabric.mixin.client.rendering.HumanoidArmorLayerMixin;
-import net.greenjab.nekomasfixed.registry.item.quiver.QuiverContents;
 import net.greenjab.nekomasfixed.registry.registries.BlockRegistry;
-import net.greenjab.nekomasfixed.registry.registries.ComponentRegistry;
 import net.greenjab.nekomasfixed.registry.registries.ItemRegistry;
 import net.greenjab.nekomasfixed.render.block.item.TerracottaDecoratedPotSpecialRenderer;
-import net.greenjab.nekomasfixed.util.QuiverComponentChangeProperty;
-import net.greenjab.nekomasfixed.util.QuiverListState;
 import net.minecraft.client.data.*;
 
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.MultiVariant;
-import net.minecraft.client.data.models.model.ItemModelUtils;
-import net.minecraft.client.data.models.model.ModelTemplates;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.data.models.model.TexturedModel;
-import net.minecraft.client.renderer.blockentity.DecoratedPotRenderer;
-import net.minecraft.client.renderer.item.ItemModel;
-import net.minecraft.client.renderer.item.SelectItemModel;
-import net.minecraft.client.renderer.item.properties.conditional.ComponentMatches;
-import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
-import net.minecraft.client.renderer.special.DecoratedPotSpecialRenderer;
+import net.minecraft.client.data.models.model.*;
+import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.equipment.ArmorMaterial;
-import net.minecraft.world.item.equipment.trim.ArmorTrim;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jspecify.annotations.NonNull;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
+
+import static net.minecraft.client.data.models.BlockModelGenerators.plainVariant;
 
 
 public class ModModelProvider extends FabricModelProvider {
@@ -147,6 +129,7 @@ public class ModModelProvider extends FabricModelProvider {
     }
 
 
+
     @Override
     public void generateItemModels(@NonNull ItemModelGenerators itemModelGenerator) {
         itemModelGenerator.generateFlatItem(ItemRegistry.WHITE_DYED_BRUSH, ModelTemplates.FLAT_ITEM);
@@ -180,9 +163,9 @@ public class ModModelProvider extends FabricModelProvider {
 
     public void registerSlab(BlockModelGenerators blockStateModelGenerator, Block block, Block slab) {
         TextureMapping textureMap = TextureMapping.cube(block);
-        MultiVariant weightedVariant = BlockModelGenerators.plainVariant(ModelTemplates.SLAB_BOTTOM.create(slab, textureMap, blockStateModelGenerator.modelOutput));
-        MultiVariant weightedVariant2 = BlockModelGenerators.plainVariant(ModelTemplates.SLAB_TOP.create(slab, textureMap, blockStateModelGenerator.modelOutput));
-        MultiVariant weightedVariant3 = BlockModelGenerators.plainVariant(
+        MultiVariant weightedVariant = plainVariant(ModelTemplates.SLAB_BOTTOM.create(slab, textureMap, blockStateModelGenerator.modelOutput));
+        MultiVariant weightedVariant2 = plainVariant(ModelTemplates.SLAB_TOP.create(slab, textureMap, blockStateModelGenerator.modelOutput));
+        MultiVariant weightedVariant3 = plainVariant(
                 ModelTemplates.CUBE_COLUMN.createWithOverride(slab, "_double", textureMap, blockStateModelGenerator.modelOutput)
         );
 
@@ -191,18 +174,18 @@ public class ModModelProvider extends FabricModelProvider {
 
     public void registerStairs(BlockModelGenerators blockStateModelGenerator, Block block, Block stairs) {
         TextureMapping textureMap = TextureMapping.cube(block);
-        MultiVariant weightedVariant = BlockModelGenerators.plainVariant(ModelTemplates.STAIRS_INNER.create(stairs, textureMap, blockStateModelGenerator.modelOutput));
-        MultiVariant weightedVariant2 = BlockModelGenerators.plainVariant(ModelTemplates.STAIRS_STRAIGHT.create(stairs, textureMap, blockStateModelGenerator.modelOutput));
-        MultiVariant weightedVariant3 = BlockModelGenerators.plainVariant(ModelTemplates.STAIRS_OUTER.create(stairs, textureMap, blockStateModelGenerator.modelOutput));
+        MultiVariant weightedVariant = plainVariant(ModelTemplates.STAIRS_INNER.create(stairs, textureMap, blockStateModelGenerator.modelOutput));
+        MultiVariant weightedVariant2 = plainVariant(ModelTemplates.STAIRS_STRAIGHT.create(stairs, textureMap, blockStateModelGenerator.modelOutput));
+        MultiVariant weightedVariant3 = plainVariant(ModelTemplates.STAIRS_OUTER.create(stairs, textureMap, blockStateModelGenerator.modelOutput));
         blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createStairs(stairs, weightedVariant, weightedVariant2, weightedVariant3));
     }
 
 
     public void registerWall(BlockModelGenerators blockStateModelGenerator, Block block, Block wall) {
         TextureMapping textureMap = TextureMapping.cube(block);
-        MultiVariant weightedVariant = BlockModelGenerators.plainVariant(ModelTemplates.WALL_POST.create(wall, textureMap, blockStateModelGenerator.modelOutput));
-        MultiVariant weightedVariant2 = BlockModelGenerators.plainVariant(ModelTemplates.WALL_LOW_SIDE.create(wall, textureMap, blockStateModelGenerator.modelOutput));
-        MultiVariant weightedVariant3 = BlockModelGenerators.plainVariant(ModelTemplates.WALL_TALL_SIDE.create(wall, textureMap, blockStateModelGenerator.modelOutput));
+        MultiVariant weightedVariant = plainVariant(ModelTemplates.WALL_POST.create(wall, textureMap, blockStateModelGenerator.modelOutput));
+        MultiVariant weightedVariant2 = plainVariant(ModelTemplates.WALL_LOW_SIDE.create(wall, textureMap, blockStateModelGenerator.modelOutput));
+        MultiVariant weightedVariant3 = plainVariant(ModelTemplates.WALL_TALL_SIDE.create(wall, textureMap, blockStateModelGenerator.modelOutput));
         blockStateModelGenerator.blockStateOutput.accept(BlockModelGenerators.createWall(wall, weightedVariant, weightedVariant2, weightedVariant3));
         Identifier identifier = ModelTemplates.WALL_INVENTORY.create(wall, textureMap, blockStateModelGenerator.modelOutput);
         blockStateModelGenerator.registerSimpleItemModel(wall, identifier);

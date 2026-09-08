@@ -1,5 +1,6 @@
 package net.greenjab.nekomasfixed.registry.registries;
 
+import net.fabricmc.fabric.api.client.model.loading.v1.BlockStateResolver;
 import net.greenjab.nekomasfixed.NekomasFixed;
 import net.greenjab.nekomasfixed.registry.item.*;
 import net.greenjab.nekomasfixed.registry.item.quiver.QuiverContents;
@@ -29,33 +30,21 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BedItem;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BoatItem;
-import net.minecraft.world.item.BundleItem;
-import net.minecraft.world.item.DoubleHighBlockItem;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.HangingSignItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SignItem;
-import net.minecraft.world.item.SmithingTemplateItem;
-import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.item.StandingAndWallBlockItem;
-import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BlocksAttacks;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.Weapon;
+import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.equipment.ArmorMaterials;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.entity.PotDecorations;
 import net.minecraft.world.waypoints.Waypoint;
@@ -315,10 +304,10 @@ public class ItemRegistry {
     public static final Item INDIGO_HARNESS = register("indigo_harness",(new Item.Properties()).stacksTo(1).component(DataComponents.EQUIPPABLE,HarnessHelper.ofHarness(ModColors.INDIGO)));
     public static final Item MAROON_HARNESS = register("maroon_harness",(new Item.Properties()).stacksTo(1).component(DataComponents.EQUIPPABLE,HarnessHelper.ofHarness(ModColors.MAROON)));
 
-    public static final Item AMBER_DYE = registerDye("amber_dye");
-    public static final Item AQUA_DYE = registerDye("aqua_dye");
-    public static final Item INDIGO_DYE = registerDye("indigo_dye");
-    public static final Item MAROON_DYE = registerDye("maroon_dye");
+    public static final Item AMBER_DYE = registerDye("amber_dye", BlockRegistry.customDye("amber"));
+    public static final Item AQUA_DYE = registerDye("aqua_dye", BlockRegistry.customDye("aqua"));
+    public static final Item INDIGO_DYE = registerDye("indigo_dye", BlockRegistry.customDye("indigo"));
+    public static final Item MAROON_DYE = registerDye("maroon_dye", BlockRegistry.customDye("maroon"));
 
 
     public static final Item WHITE_DYED_BRUSH = register("white_dyed_brush", (settings) -> new DyedBrushItem(AllDyes.WHITE, settings), new Item.Properties().stacksTo(1).durability(64));
@@ -503,6 +492,10 @@ public class ItemRegistry {
     public static final Item QUIVER =register("quiver", QuiverItem::new, (new Item.Properties()).stacksTo(1).component(ComponentRegistry.QUIVER_CONTENTS, QuiverContents.EMPTY));
     public static final Item GOAT_HORN_HELMET = register("goat_horn_helmet", new Item.Properties().humanoidArmor(OtherRegistry.GOAT_HORN, ArmorType.HELMET));
 
+    public static final Item AMBER_BANNER = register("amber_banner", (p)->new BannerItem(BlockRegistry.AMBER_BANNER, BlockRegistry.AMBER_WALL_BANNER, p), new Item.Properties().stacksTo(16).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
+    public static final Item AQUA_BANNER = register("aqua_banner", (p)->new BannerItem(BlockRegistry.AQUA_BANNER, BlockRegistry.AQUA_WALL_BANNER, p), new Item.Properties().stacksTo(16).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
+    public static final Item MAROON_BANNER = register("maroon_banner", (p)->new BannerItem(BlockRegistry.MAROON_BANNER, BlockRegistry.MAROON_WALL_BANNER, p), new Item.Properties().stacksTo(16).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
+    public static final Item INDIGO_BANNER = register("indigo_banner", (p)->new BannerItem(BlockRegistry.INDIGO_BANNER, BlockRegistry.INDIGO_WALL_BANNER, p), new Item.Properties().stacksTo(16).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
 
 
     public static Item register(String id, Item.Properties settings) {
@@ -535,9 +528,11 @@ public class ItemRegistry {
     public static Item register(Block block, BiFunction<Block, Item.Properties, Item> factory) {
         return register(block, factory, new Item.Properties());
     }
-    public static DyeItem registerDye(String id) {
-        return (DyeItem) register(keyOf(id), ModDyeItems::new, new Item.Properties());
+    public static DyeItem registerDye(String id, DyeColor color) {
+        return (DyeItem) register(keyOf(id), ModDyeItems::new,new Item.Properties().component(DataComponents.DYE, color));
     }
+
+
     public static void registerItems() {
         NekomasFixed.LOGGER.info("Registering items...");
 

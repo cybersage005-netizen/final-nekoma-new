@@ -55,6 +55,19 @@ public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
                 .add(Blocks.POTENT_SULFUR.properties().blockId())
                 .add(Blocks.POLISHED_SULFUR.properties().blockId());
 
+        tag(BlockTags.BANNERS)
+                .add(BlockRegistry.AMBER_BANNER.properties().blockId())
+                .add(BlockRegistry.AQUA_BANNER.properties().blockId())
+                .add(BlockRegistry.MAROON_BANNER.properties().blockId())
+                .add(BlockRegistry.INDIGO_BANNER.properties().blockId())
+                .add(BlockRegistry.AMBER_WALL_BANNER.properties().blockId())
+                .add(BlockRegistry.AQUA_WALL_BANNER.properties().blockId())
+                .add(BlockRegistry.MAROON_WALL_BANNER.properties().blockId())
+                .add(BlockRegistry.INDIGO_WALL_BANNER.properties().blockId())
+        ;
+
+
+
         tag(ModTags.CAN_BECOME_POT_FACE)
                 .addTag(ModTags.GLAZED_TERRACOTTAS)
                 .add(Blocks.BRICKS.properties().blockId());
