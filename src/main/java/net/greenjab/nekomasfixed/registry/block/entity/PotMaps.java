@@ -40,6 +40,10 @@ public class PotMaps {
         SHERD_TO_STRING_MAPPING.put(Items.PRIZE_POTTERY_SHERD, "prize");
         SHERD_TO_STRING_MAPPING.put(Items.SCRAPE_POTTERY_SHERD, "scrape");
         SHERD_TO_STRING_MAPPING.put(Items.PLENTY_POTTERY_SHERD, "plenty");
+        SHERD_TO_STRING_MAPPING.put(Items.SHEAF_POTTERY_SHERD, "sheaf");
+        SHERD_TO_STRING_MAPPING.put(Items.SHELTER_POTTERY_SHERD, "shelter");
+        SHERD_TO_STRING_MAPPING.put(Items.SNORT_POTTERY_SHERD, "snort");
+        SHERD_TO_STRING_MAPPING.put(Items.SKULL_POTTERY_SHERD, "skull");
         SHERD_TO_STRING_MAPPING.put(Items.BRICK, "blank"); //fallback
 
         POT_FACE_TO_STRING_MAPPING.put(Blocks.GLAZED_TERRACOTTA.pick(DyeColor.LIGHT_BLUE), "light_blue");

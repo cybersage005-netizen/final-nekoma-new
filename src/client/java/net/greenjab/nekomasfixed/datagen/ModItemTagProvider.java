@@ -45,6 +45,11 @@ public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
                 .add(getKey(ItemRegistry.AQUA_DYE))
                 .add(getKey(ItemRegistry.MAROON_DYE))
                 .add(getKey(ItemRegistry.INDIGO_DYE));
+
+        tag(ModTags.POTIONS)
+                .add(getKey(Items.POTION));
+
+        tag(ItemTags.ARROWS).add(getKey(ItemRegistry.TIPPED_ARROW_CUSTOM));
     }
 
     private ResourceKey<Item> getKey(Item item){

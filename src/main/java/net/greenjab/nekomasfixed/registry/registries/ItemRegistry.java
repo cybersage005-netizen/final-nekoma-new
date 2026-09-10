@@ -481,7 +481,6 @@ public class ItemRegistry {
             .component(DataComponents.POT_DECORATIONS, PotDecorations.EMPTY)
     );
 
-//sulfur related
     public static final Item SULFUR_LANTERN =register(BlockRegistry.SULFUR_LANTERN);
     public static final Item SULFUR_CAMPFIRE =register(BlockRegistry.SULFUR_CAMPFIRE);
     public static final Item GOLD_CHAIN =register(BlockRegistry.GOLD_CHAIN);
@@ -489,7 +488,9 @@ public class ItemRegistry {
             new StandingAndWallBlockItem(block, BlockRegistry.WALL_SULFUR_TORCH, Direction.DOWN, settings)));
     public static final Item TIPPED_ARROW_CUSTOM = register("tipped_arrow_custom", CustomArrowItem::new, (new Item.Properties()).stacksTo(64).component(ComponentRegistry.TIPPED_POTION_CONTENTS, TippedArrowCustomComponent.EMPTY));
 
-    public static final Item QUIVER =register("quiver", QuiverItem::new, (new Item.Properties()).stacksTo(1).component(ComponentRegistry.QUIVER_CONTENTS, QuiverContents.EMPTY));
+    public static final Item QUIVER =register("quiver", QuiverItem::new,
+            (new Item.Properties()).stacksTo(1).component(ComponentRegistry.QUIVER_CONTENTS, QuiverContents.EMPTY));
+
     public static final Item GOAT_HORN_HELMET = register("goat_horn_helmet", new Item.Properties().humanoidArmor(OtherRegistry.GOAT_HORN, ArmorType.HELMET));
 
     public static final Item AMBER_BANNER = register("amber_banner", (p)->new BannerItem(BlockRegistry.AMBER_BANNER, BlockRegistry.AMBER_WALL_BANNER, p), new Item.Properties().stacksTo(16).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
@@ -531,7 +532,6 @@ public class ItemRegistry {
     public static DyeItem registerDye(String id, DyeColor color) {
         return (DyeItem) register(keyOf(id), ModDyeItems::new,new Item.Properties().component(DataComponents.DYE, color));
     }
-
 
     public static void registerItems() {
         NekomasFixed.LOGGER.info("Registering items...");

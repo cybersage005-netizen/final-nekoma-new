@@ -102,7 +102,9 @@ public class BlockRegistry {
     /// BAOBAB WOODSET
     static BlockSetType BAOBAB_BLOCKSETTYPE = BlockSetType.register(new BlockSetType("baobab"));
     static WoodType BAOBAB_WOODTYPE = WoodType.register(new WoodType("baobab", BAOBAB_BLOCKSETTYPE));
-    public static final Block BAOBAB_LOG = register("baobab_log", RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG).mapColor(MapColor.WOOD));
+    public static final Block BAOBAB_LOG = register("baobab_log",
+            RotatedPillarBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG).mapColor(MapColor.WOOD));
     public static final Block BAOBAB_WOOD = register("baobab_wood", BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD));
     public static final Block STRIPPED_BAOBAB_LOG = register(
             "stripped_baobab_log", RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_LOG));
@@ -240,11 +242,13 @@ public class BlockRegistry {
     public static final Block INDIGO_CARPET = register("indigo_carpet", (settings) -> new WoolCarpetBlock(DyeColor.MAGENTA, settings), BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).strength(0.1F).sound(SoundType.WOOL).ignitedByLava());
     public static final Block MAROON_CARPET = register("maroon_carpet", (settings) -> new WoolCarpetBlock(DyeColor.RED, settings), BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(0.1F).sound(SoundType.WOOL).ignitedByLava());
 
+
     /// TERRACOTTA
     public static final Block AMBER_TERRACOTTA = register("amber_terracotta", BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_YELLOW).instrument(NoteBlockInstrument.BASEDRUM).strength(0.70F).explosionResistance(4.2F).requiresCorrectToolForDrops());
     public static final Block AQUA_TERRACOTTA = register("aqua_terracotta", BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_LIGHT_BLUE).instrument(NoteBlockInstrument.BASEDRUM).strength(0.70F).explosionResistance(4.2F).requiresCorrectToolForDrops());
     public static final Block INDIGO_TERRACOTTA = register("indigo_terracotta", BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLUE).instrument(NoteBlockInstrument.BASEDRUM).strength(0.70F).explosionResistance(4.2F).requiresCorrectToolForDrops());
     public static final Block MAROON_TERRACOTTA = register("maroon_terracotta", BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_RED).instrument(NoteBlockInstrument.BASEDRUM).strength(0.70F).explosionResistance(4.2F).requiresCorrectToolForDrops());
+
 
     /// CONCRETES & CONCRETE POWDERS
     public static final Block AMBER_CONCRETE = register("amber_concrete", BlockBehaviour.Properties.of().mapColor(DyeColor.WHITE).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(1.8F));
@@ -475,10 +479,10 @@ public class BlockRegistry {
     public static final Block GOLD_CHAIN = register("gold_chain", ChainBlock::new, BlockBehaviour.Properties.of().forceSolidOn().requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion());
     public static final Block TERRACOTTA_DECORATED_POT = register("terracotta_decorated_pot", TerracottaDecoratedPotBlock::new, BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_RED).strength(0.0F, 0.0F).pushReaction(PushReaction.DESTROY).noOcclusion());
 
-   public static final Block AMBER_BANNER = registerBannerBlock("amber_banner", customDye("amber"));
-   public static final Block AQUA_BANNER = registerBannerBlock("aqua_banner",customDye("aqua"));
-   public static final Block MAROON_BANNER = registerBannerBlock("maroon_banner",customDye("maroon"));
-   public static final Block INDIGO_BANNER = registerBannerBlock("indigo_banner",customDye("indigo"));
+    public static final Block AMBER_BANNER = registerBannerBlock("amber_banner", customDye("amber"));
+    public static final Block AQUA_BANNER = registerBannerBlock("aqua_banner",customDye("aqua"));
+    public static final Block MAROON_BANNER = registerBannerBlock("maroon_banner",customDye("maroon"));
+    public static final Block INDIGO_BANNER = registerBannerBlock("indigo_banner",customDye("indigo"));
 
     public static final Block AMBER_WALL_BANNER = registerWallBannerBlock("amber_wall_banner",customDye("amber"));
     public static final Block AQUA_WALL_BANNER = registerWallBannerBlock("aqua_wall_banner",customDye("aqua"));

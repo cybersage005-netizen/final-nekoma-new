@@ -1,7 +1,10 @@
 package net.greenjab.nekomasfixed.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.greenjab.nekomasfixed.registry.other.TippedArrowCustomComponent;
+import net.greenjab.nekomasfixed.registry.registries.ComponentRegistry;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
@@ -30,6 +33,24 @@ public abstract class AbstractArrowMixin {
                 mob.level().addFreshEntity(areaEffectCloudEntity);
                 arrowEntity.addTag("areaEffect");
             }
+        }
+    }
+
+    @Inject(method = "doPostHurtEffects", at = @At("HEAD"))
+    public void doPostHurtEffects(LivingEntity mob, CallbackInfo ci){
+        final var abstractArrow = (AbstractArrow) (Object) this;
+        if (abstractArrow instanceof Arrow arrowEntity ){
+            ItemStack arrow = arrowEntity.getPickupItemStackOrigin();
+            if(arrow.has(ComponentRegistry.TIPPED_POTION_CONTENTS)){
+                TippedArrowCustomComponent component = arrow.get(ComponentRegistry.TIPPED_POTION_CONTENTS);
+                assert component != null;
+                for(PotionContents contents : component.potionContents()){
+                    for(MobEffectInstance effect : contents.getAllEffects()){
+                        arrowEntity.addEffect(effect);
+                    }
+                }
+            }
+
         }
     }
 

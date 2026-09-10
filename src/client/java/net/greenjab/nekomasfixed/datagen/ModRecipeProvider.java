@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.greenjab.nekomasfixed.registry.recipe.CustomTippedArrowRecipe;
 import net.greenjab.nekomasfixed.registry.registries.BlockRegistry;
 import net.greenjab.nekomasfixed.registry.registries.ItemRegistry;
+import net.greenjab.nekomasfixed.registry.registries.RecipeRegistry;
 import net.greenjab.nekomasfixed.util.AllDyes;
 import net.greenjab.nekomasfixed.util.BlockDyeMap;
 import net.greenjab.nekomasfixed.util.ItemDyeMap;
@@ -19,9 +20,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.DecoratedPotRecipe;
-import net.minecraft.world.item.crafting.FireworkRocketRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.Blocks;
 import org.jspecify.annotations.NonNull;
 import java.util.ArrayList;
@@ -95,6 +94,11 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy(getHasName(Items.GOLD_NUGGET), has(Items.GOLD_NUGGET))
                         .unlockedBy(getHasName(Items.GOLD_INGOT), has(Items.GOLD_INGOT))
                         .save(output);
+
+                CustomCraftingRecipeBuilder.customCrafting(RecipeCategory.MISC, (commonInfo, bookInfo) -> new CustomTippedArrowRecipe(commonInfo, bookInfo, Ingredient.of(Items.ARROW), this.tag(ModTags.POTIONS), new ItemStackTemplate(ItemRegistry.TIPPED_ARROW_CUSTOM)))
+                        .unlockedBy("has_arrow", this.has(Items.ARROW))
+                        .unlockedBy("has_potion", this.has(Items.POTION))
+                        .save(output, RecipeRegistry.CUSTOM_TIPPED_ARROW_RECIPE.toString());
 
                 createBannerRecipe(ItemRegistry.AMBER_BANNER, ItemRegistry.AMBER_WOOL).save(output);
                 createBannerRecipe(ItemRegistry.AQUA_BANNER, ItemRegistry.AQUA_WOOL).save(output);
