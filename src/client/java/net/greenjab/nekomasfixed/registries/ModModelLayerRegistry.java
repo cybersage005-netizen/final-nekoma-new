@@ -76,6 +76,7 @@ public class ModModelLayerRegistry {
 
     public static ModelLayerLocation BAOBAB_BOAT = register("boat/baobab");
     public static ModelLayerLocation BAOBAB_CHEST_BOAT = register("chest_boat/baobab");
+    public static ModelLayerLocation CARPET = register("carpet");
 
     private static ModelLayerLocation register(final String model) {
         return register(model, "main");
@@ -128,6 +129,8 @@ public class ModModelLayerRegistry {
         ModelLayerRegistry.registerModelLayer(ModModelLayerRegistry.DERELICT_BABY_ARMOR.chest(), humanoidBabyArmor::chest);
         ModelLayerRegistry.registerModelLayer(ModModelLayerRegistry.DERELICT_BABY_ARMOR.legs(), humanoidBabyArmor::legs);
         ModelLayerRegistry.registerModelLayer(ModModelLayerRegistry.DERELICT_BABY_ARMOR.feet(), humanoidBabyArmor::feet);
+
+        ModelLayerRegistry.registerModelLayer(ModModelLayerRegistry.CARPET, CarpetModel::createBodyLayer);
 
         ModelLayerRegistry.registerModelLayer(ModModelLayerRegistry.CLAM, ClamBlockModel::getTexturedModelData);
         ModelLayerRegistry.registerModelLayer(ModModelLayerRegistry.CLOCK, ClockBlockModel::getTexturedModelData);

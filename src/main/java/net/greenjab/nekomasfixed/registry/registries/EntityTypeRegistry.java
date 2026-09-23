@@ -3,6 +3,7 @@ package net.greenjab.nekomasfixed.registry.registries;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.greenjab.nekomasfixed.NekomasFixed;
 import net.greenjab.nekomasfixed.registry.entity.*;
+import net.greenjab.nekomasfixed.registry.entity.Carpet;
 import net.greenjab.nekomasfixed.registry.entity.Moobloom.Moobloom;
 import net.greenjab.nekomasfixed.registry.entity.WildFire.FireBomb;
 import net.greenjab.nekomasfixed.registry.entity.WildFire.WildfireEntity;
@@ -10,10 +11,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.entity.vehicle.boat.Boat;
@@ -110,7 +108,14 @@ public class EntityTypeRegistry {
             EntityType.Builder.of(Drenched::new, MobCategory.MONSTER)
                     .sized(0.6f, 1.99f).notInPeaceful());
 
-
+    public static final EntityType<Carpet> CARPET = register("carpet",
+            EntityType.Builder.of(Carpet::new, MobCategory.MISC)
+                    .noLootTable()
+                    .sized(1.0F, (float) 1 /16)
+                    .clientTrackingRange(10)
+                    .updateInterval(Integer.MAX_VALUE)
+                    .dontTrackDeltas()
+    );
 
     private static <T extends Entity> EntityType<T> register(String id, EntityType.Builder<T> type) {
         return register(keyOf(id), type);

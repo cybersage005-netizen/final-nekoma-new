@@ -44,6 +44,7 @@ public class ModEntityRendererRegistry {
         EntityRenderers.register(EntityTypeRegistry.FIRE_BOMB, FireBombRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.SLINGSHOT_PROJECTILE, ThrownItemRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.SLOWNESS_SNOWBALL, ThrownItemRenderer::new);
+        EntityRenderers.register(EntityTypeRegistry.CARPET, CarpetRenderer::new);
 
 
         EntityRenderers.register(EntityTypeRegistry.WILDFIRE, WildfireRenderer::new);

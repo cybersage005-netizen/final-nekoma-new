@@ -4,7 +4,7 @@ plugins {
 }
 
 version = "0.5.4-26.3"
-group = "net.green_jab.nekomasfixed"
+group = "net.greenjab.nekomasfixed"
 
 base {
 	archivesName = project.name
@@ -56,6 +56,8 @@ dependencies {
 	implementation(libs.fabric.loader)
 	implementation(libs.fabric.api)
 	vineflowerDecompilerClasspath(libs.vineflower)
+	include(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.5.0"))
+	implementation("io.github.llamalad7:mixinextras-fabric:0.5.0")
 	api "me.shedaniel.cloth:cloth-config-fabric:26.3.158"
 	api "com.terraformersmc:modmenu:21.0.0-beta.1"
 }

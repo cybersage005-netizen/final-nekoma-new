@@ -410,6 +410,7 @@ public class ItemRegistry {
     public static final Item INDIGO_BRICK_WALL = register(BlockRegistry.INDIGO_BRICK_WALL);
     public static final Item MAROON_BRICK_WALL = register(BlockRegistry.MAROON_BRICK_WALL);
 
+    public static final Item CARPET = register("carpet", CarpetItem::new, new Item.Properties().stacksTo(64));
 
     public static final Item CLEAR_FROGLIGHT = register(BlockRegistry.CLEAR_FROGLIGHT);
     public static final Item CLOUDY_FROGLIGHT = register(BlockRegistry.CLOUDY_FROGLIGHT);
