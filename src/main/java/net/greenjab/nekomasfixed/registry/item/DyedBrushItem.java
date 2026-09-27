@@ -157,7 +157,7 @@ public class DyedBrushItem extends Item {
         return part == BedPart.FOOT ? direction : direction.getOpposite();
     }
 
-    private void afterUse( UseOnContext context){
+    public void afterUse( UseOnContext context){
         Player player = context.getPlayer();
         if (player != null) {
             context.getItemInHand().hurtAndBreak(1, player, context.getHand());

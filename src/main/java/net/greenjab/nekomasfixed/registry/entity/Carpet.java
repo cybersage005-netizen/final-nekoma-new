@@ -1,8 +1,10 @@
 package net.greenjab.nekomasfixed.registry.entity;
 
 import com.mojang.serialization.Codec;
+import net.greenjab.nekomasfixed.registry.item.DyedBrushItem;
 import net.greenjab.nekomasfixed.registry.registries.ItemRegistry;
 import net.greenjab.nekomasfixed.util.BlockDyeMap;
+import net.greenjab.nekomasfixed.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentType;
@@ -14,6 +16,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Continuation;
@@ -25,6 +28,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.decoration.BlockAttachedEntity;
 import net.minecraft.world.entity.decoration.Cushion;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -33,8 +37,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarpetBlock;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
@@ -85,6 +91,32 @@ public class Carpet extends BlockAttachedEntity {
 
     public static boolean canBePlacedAt(final Level level, final AABB boundingBox) {
         return wouldSurviveAt(level, boundingBox) && !isAnchorBuried(level, boundingBox);
+    }
+
+    @Override
+    public InteractionResult interact(final Player player, final InteractionHand hand, final Vec3 location) {
+        ItemStack itemStack = player.getItemInHand(hand);
+
+        if(itemStack.isEmpty()){
+            return InteractionResult.FAIL;
+        }
+
+        if(itemStack.getItem() instanceof DyedBrushItem brushItem){
+            try{
+                if(!this.getColor().equals(brushItem.getColor())){
+                    this.setColor(DyeColor.valueOf(brushItem.getColor().getSerializedName().toLowerCase()));
+                    itemStack.hurtAndBreak(1, player, hand);
+                    level().playSound(null, pos, SoundEvents.SLIME_SQUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    return InteractionResult.SUCCESS;
+                }
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Invalid brush color did not match");
+            }
+
+        }
+
+        return InteractionResult.FAIL;
+
     }
 
     public Carpet(EntityType<? extends Carpet> type, final  Level level) {
@@ -283,6 +315,7 @@ public class Carpet extends BlockAttachedEntity {
             return super.applyImplicitComponent(type, value);
         }
     }
+
 
     private Item getStackToDrop(){
         return this.isSpotted() ? SPOTTED_ITEM_MAP.get(this.getColor()) :

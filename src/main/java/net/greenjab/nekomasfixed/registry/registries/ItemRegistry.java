@@ -462,8 +462,6 @@ public class ItemRegistry {
     public static final Item INDIGO_SPOTTED_CARPET = register("indigo_spotted_carpet", (p)->new CarpetItem(DyeColor.PURPLE, p, true), new Item.Properties().component(DataComponents.EQUIPPABLE, Equippable.llamaSwag(DyeColor.PURPLE)).cookingFuel(ContextIntProviders.COOKING_TIME_WOOL_CARPETS));
     public static final Item MAROON_SPOTTED_CARPET = register("maroon_spotted_carpet", (p)->new CarpetItem(DyeColor.RED, p, true), new Item.Properties().component(DataComponents.EQUIPPABLE, Equippable.llamaSwag(DyeColor.RED)).cookingFuel(ContextIntProviders.COOKING_TIME_WOOL_CARPETS));
 
-
-
     public static Item registerCarpetSpotted(DyeColor color){
         return register((color.getName().toLowerCase()+"_spotted_carpet"), (p)->new CarpetItem(color,p, true),
                 new Item.Properties().component(DataComponents.EQUIPPABLE, Equippable.llamaSwag(color)).cookingFuel(ContextIntProviders.COOKING_TIME_WOOL_CARPETS)
