@@ -21,4 +21,6 @@ public class CarpetModel extends EntityModel<CarpetRenderState> {
         );
         return LayerDefinition.create(meshDefinition, 64, 64);
     }
+
+
 }

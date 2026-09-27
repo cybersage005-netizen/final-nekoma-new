@@ -22,19 +22,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BoatItem;
-import net.minecraft.world.item.BundleItem;
-import net.minecraft.world.item.DoubleHighBlockItem;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.HangingSignItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SmithingTemplateItem;
-import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.item.StandingAndWallBlockItem;
-import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.component.*;
 import net.minecraft.world.item.equipment.ArmorMaterials;
@@ -42,6 +30,7 @@ import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import net.minecraft.world.waypoints.Waypoint;
 import java.util.List;
 import java.util.Optional;
@@ -410,7 +399,6 @@ public class ItemRegistry {
     public static final Item INDIGO_BRICK_WALL = register(BlockRegistry.INDIGO_BRICK_WALL);
     public static final Item MAROON_BRICK_WALL = register(BlockRegistry.MAROON_BRICK_WALL);
 
-    public static final Item CARPET = register("carpet", CarpetItem::new, new Item.Properties().stacksTo(64));
 
     public static final Item CLEAR_FROGLIGHT = register(BlockRegistry.CLEAR_FROGLIGHT);
     public static final Item CLOUDY_FROGLIGHT = register(BlockRegistry.CLOUDY_FROGLIGHT);
@@ -451,28 +439,36 @@ public class ItemRegistry {
     public static final Item INDIGO_SPOTTED_WOOL = register(BlockRegistry.INDIGO_SPOTTED_WOOL);
     public static final Item MAROON_SPOTTED_WOOL = register(BlockRegistry.MAROON_SPOTTED_WOOL);
 
-    public static final Item WHITE_SPOTTED_CARPET = register(BlockRegistry.WHITE_SPOTTED_CARPET);
-    public static final Item LIGHT_GRAY_SPOTTED_CARPET = register(BlockRegistry.LIGHT_GRAY_SPOTTED_CARPET);
-    public static final Item GRAY_SPOTTED_CARPET = register(BlockRegistry.GRAY_SPOTTED_CARPET);
-    public static final Item BLACK_SPOTTED_CARPET = register(BlockRegistry.BLACK_SPOTTED_CARPET);
-    public static final Item BROWN_SPOTTED_CARPET = register(BlockRegistry.BROWN_SPOTTED_CARPET);
-    public static final Item RED_SPOTTED_CARPET = register(BlockRegistry.RED_SPOTTED_CARPET);
-    public static final Item ORANGE_SPOTTED_CARPET = register(BlockRegistry.ORANGE_SPOTTED_CARPET);
-    public static final Item YELLOW_SPOTTED_CARPET = register(BlockRegistry.YELLOW_SPOTTED_CARPET);
-    public static final Item LIME_SPOTTED_CARPET = register(BlockRegistry.LIME_SPOTTED_CARPET);
-    public static final Item GREEN_SPOTTED_CARPET = register(BlockRegistry.GREEN_SPOTTED_CARPET);
-    public static final Item CYAN_SPOTTED_CARPET = register(BlockRegistry.CYAN_SPOTTED_CARPET);
-    public static final Item LIGHT_BLUE_SPOTTED_CARPET = register(BlockRegistry.LIGHT_BLUE_SPOTTED_CARPET);
-    public static final Item BLUE_SPOTTED_CARPET = register(BlockRegistry.BLUE_SPOTTED_CARPET);
-    public static final Item PURPLE_SPOTTED_CARPET = register(BlockRegistry.PURPLE_SPOTTED_CARPET);
-    public static final Item MAGENTA_SPOTTED_CARPET = register(BlockRegistry.MAGENTA_SPOTTED_CARPET);
-    public static final Item PINK_SPOTTED_CARPET = register(BlockRegistry.PINK_SPOTTED_CARPET);
-    public static final Item AMBER_SPOTTED_CARPET = register(BlockRegistry.AMBER_SPOTTED_CARPET);
-    public static final Item AQUA_SPOTTED_CARPET = register(BlockRegistry.AQUA_SPOTTED_CARPET);
-    public static final Item INDIGO_SPOTTED_CARPET = register(BlockRegistry.INDIGO_SPOTTED_CARPET);
-    public static final Item MAROON_SPOTTED_CARPET = register(BlockRegistry.MAROON_SPOTTED_CARPET);
+    public static final Item WHITE_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.WHITE);
+    public static final Item LIGHT_GRAY_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.LIGHT_GRAY);
+    public static final Item GRAY_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.GRAY);
+    public static final Item BLACK_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.BLACK);
+    public static final Item BROWN_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.BROWN);
+    public static final Item RED_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.RED);
+    public static final Item ORANGE_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.ORANGE);
+    public static final Item YELLOW_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.YELLOW);
+    public static final Item LIME_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.LIME);
+    public static final Item GREEN_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.GREEN);
+    public static final Item CYAN_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.CYAN);
+    public static final Item LIGHT_BLUE_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.LIGHT_BLUE);
+    public static final Item BLUE_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.BLUE);
+    public static final Item PURPLE_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.PURPLE);
+    public static final Item MAGENTA_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.MAGENTA);
+    public static final Item PINK_SPOTTED_CARPET = registerCarpetSpotted(DyeColor.PINK);
+
+    // once my dye changes are merged, this must be fixed
+    public static final Item AMBER_SPOTTED_CARPET = register("amber_spotted_carpet", (p)->new CarpetItem(DyeColor.YELLOW, p, true), new Item.Properties().component(DataComponents.EQUIPPABLE, Equippable.llamaSwag(DyeColor.YELLOW)).cookingFuel(ContextIntProviders.COOKING_TIME_WOOL_CARPETS));
+    public static final Item AQUA_SPOTTED_CARPET = register("aqua_spotted_carpet", (p)->new CarpetItem(DyeColor.CYAN, p, true), new Item.Properties().component(DataComponents.EQUIPPABLE, Equippable.llamaSwag(DyeColor.CYAN)).cookingFuel(ContextIntProviders.COOKING_TIME_WOOL_CARPETS));
+    public static final Item INDIGO_SPOTTED_CARPET = register("indigo_spotted_carpet", (p)->new CarpetItem(DyeColor.PURPLE, p, true), new Item.Properties().component(DataComponents.EQUIPPABLE, Equippable.llamaSwag(DyeColor.PURPLE)).cookingFuel(ContextIntProviders.COOKING_TIME_WOOL_CARPETS));
+    public static final Item MAROON_SPOTTED_CARPET = register("maroon_spotted_carpet", (p)->new CarpetItem(DyeColor.RED, p, true), new Item.Properties().component(DataComponents.EQUIPPABLE, Equippable.llamaSwag(DyeColor.RED)).cookingFuel(ContextIntProviders.COOKING_TIME_WOOL_CARPETS));
 
 
+
+    public static Item registerCarpetSpotted(DyeColor color){
+        return register((color.getName().toLowerCase()+"_spotted_carpet"), (p)->new CarpetItem(color,p, true),
+                new Item.Properties().component(DataComponents.EQUIPPABLE, Equippable.llamaSwag(color)).cookingFuel(ContextIntProviders.COOKING_TIME_WOOL_CARPETS)
+                );
+    }
 
     public static Item register(String id, Item.Properties settings) {
         return register(keyOf(id), Item::new, settings);

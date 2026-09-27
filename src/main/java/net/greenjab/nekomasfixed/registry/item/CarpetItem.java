@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -30,8 +31,13 @@ import net.minecraft.world.phys.Vec3;
 public class CarpetItem extends Item {
     private static final double COLLISION_SHAPE_RAYCAST_EPSILON = 0.001;
 
-    public CarpetItem(final Item.Properties properties) {
+    private final DyeColor color;
+    private final boolean spotted;
+
+    public CarpetItem(final DyeColor color, final Item.Properties properties, boolean spotted) {
         super(properties);
+        this.color = color;
+        this.spotted = spotted;
     }
 
     @Override
@@ -63,7 +69,8 @@ public class CarpetItem extends Item {
                 return InteractionResult.FAIL;
             }
 
-            carpet.setColor(DyeColor.YELLOW);
+            carpet.setColor(this.color);
+            carpet.setSpotted(this.spotted);
             carpet.snapTo(entityPos, Direction.fromYRot(placeContext.getRotation()).toYRot(), 0.0F);
             serverLevel.addFreshEntity(carpet);
             carpet.destroyIfInFire(serverLevel);

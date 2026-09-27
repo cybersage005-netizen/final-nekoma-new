@@ -22,13 +22,6 @@ import net.minecraft.world.item.DyeColor;
 import java.util.EnumMap;
 
 public class CarpetRenderer extends EntityRenderer<Carpet, CarpetRenderState> {
-    private static final EnumMap<DyeColor, Identifier> TEXTURES_BY_COLOR = Util.make(
-            new EnumMap(DyeColor.class), /* lambda$static$0 */ textures -> {
-                for (DyeColor color : DyeColor.values()) {
-                    textures.put(color, Identifier.fromNamespaceAndPath("nekomasfixed","textures/entity/carpet/" + color.getName() + "_carpet.png"));
-                }
-            }
-    );
     private final CarpetModel model;
 
     public CarpetRenderer(final EntityRendererProvider.Context context) {
@@ -36,10 +29,14 @@ public class CarpetRenderer extends EntityRenderer<Carpet, CarpetRenderState> {
         this.model = new CarpetModel(context.bakeLayer(ModModelLayerRegistry.CARPET));
     }
 
+    private Identifier getId(DyeColor color, boolean isSpotted){
+        return Identifier.fromNamespaceAndPath("nekomasfixed", "textures/entity/carpet/"+color.getName() + (isSpotted ? "_spotted" : "") + "_carpet.png");
+    }
+
     public void extractRenderState(final Carpet carpet, final CarpetRenderState state, final float partialTicks) {
         super.extractRenderState(carpet, state, partialTicks);
         state.direction = Direction.fromYRot(carpet.getYRot());
-        state.texture = TEXTURES_BY_COLOR.get(carpet.getColor());
+        state.texture = getId(carpet.getColor(), carpet.isSpotted());
     }
 
     public void submit(final CarpetRenderState state, final PoseStack poseStack, final SubmitNodeCollector submitNodeCollector, final CameraRenderState camera) {

@@ -29,9 +29,11 @@ accessible class net/minecraft/world/entity/animal/dolphin/Dolphin$PlayWithItems
 accessible method net/minecraft/world/level/block/state/properties/BlockSetType register (Lnet/minecraft/world/level/block/state/properties/BlockSetType;)Lnet/minecraft/world/level/block/state/properties/BlockSetType;
 accessible method net/minecraft/data/loot/packs/VanillaBlockLoot createMobSkullDrop (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
 accessible method net/minecraft/world/level/block/state/properties/WoodType register (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;
+accessible method net/minecraft/world/item/Items registerBlock (Lnet/minecraft/references/BlockItemId;Lnet/minecraft/world/level/block/Block;Ljava/util/function/BiFunction;)Lnet/minecraft/world/item/Item;
 accessible field net/minecraft/world/level/block/entity/BaseContainerBlockEntity name Lnet/minecraft/network/chat/Component;
 accessible method net/minecraft/world/entity/monster/skeleton/AbstractSkeleton getStepSound ()Lnet/minecraft/sounds/SoundEvent;
 accessible method net/minecraft/world/entity/Mob isSunBurnTick ()Z
+accessible method net/minecraft/world/item/Items registerItem (Lnet/minecraft/resources/ResourceKey;Ljava/util/function/Function;Lnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/Item;
 accessible field net/minecraft/core/cauldron/CauldronInteractions ID_MAPPER Lnet/minecraft/util/ExtraCodecs$LateBoundIdMapper;
 accessible method net/minecraft/core/cauldron/CauldronInteraction$Dispatcher put (Lnet/minecraft/world/item/Item;Lnet/minecraft/core/cauldron/CauldronInteraction;)V
 accessible method net/minecraft/world/level/block/FireBlock setFlammable (Lnet/minecraft/world/level/block/Block;II)V
