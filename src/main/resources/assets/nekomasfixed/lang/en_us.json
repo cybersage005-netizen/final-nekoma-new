@@ -33,6 +33,9 @@
   "block.nekomasfixed.pyrotechnics_table": "Pyrotechnics Table",
   "item.nekomasfixed.pyrotechnics_table": "Pyrotechnics Table",
 
+  "config.worldgen.title": "World Gen Options",
+  "config.worldgen.narration": "Options to customize your world's generation",
+
   "block.nekomasfixed.corrupted_beacon": "Corrupted Beacon",
   "item.nekomasfixed.corrupted_beacon": "Corrupted Beacon",
   "block.nekomasfixed.enderman_head": "Enderman Head",
