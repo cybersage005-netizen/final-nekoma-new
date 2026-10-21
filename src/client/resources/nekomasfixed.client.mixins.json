@@ -37,7 +37,7 @@
     "IllagerModelMixin",
     "LivingEntityRendererMixin",
     "LootItemConditionTypesMixin",
-    "PauseScreenMixin"
+
     "LivingEntityRendererMixin",
     "SmithingScreenMixin"
   ]
