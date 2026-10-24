@@ -56,5 +56,7 @@ public class ModEntityRendererRegistry {
         EntityRenderers.register(EntityTypeRegistry.DERELICT, DerelictRenderer::new);
         EntityRenderers.register(EntityTypeRegistry.RIME, RimeRenderer::new);
 
+        EntityRenderers.register(EntityTypeRegistry.TUFF_GOLEM, TuffGolemRenderer::new);
+
     }
 }

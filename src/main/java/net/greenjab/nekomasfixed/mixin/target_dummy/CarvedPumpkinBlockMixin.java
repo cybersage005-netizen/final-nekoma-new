@@ -1,8 +1,11 @@
 package net.greenjab.nekomasfixed.mixin.target_dummy;
 
 import net.greenjab.nekomasfixed.registry.entity.TargetDummy;
+import net.greenjab.nekomasfixed.registry.entity.TuffGolem.TuffGolem;
 import net.greenjab.nekomasfixed.registry.registries.EntityTypeRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.Level;
@@ -35,6 +38,7 @@ public abstract class CarvedPumpkinBlockMixin {
     @Unique
     @Nullable
     private BlockPattern targetDummyPattern;
+    private BlockPattern tuffGolemPattern;
 
     @Unique
     private BlockPattern getTargetDummyPattern() {
@@ -49,10 +53,47 @@ public abstract class CarvedPumpkinBlockMixin {
         return this.targetDummyPattern;
     }
 
+    @Unique
+    private BlockPattern getTuffGolemPattern() {
+        if (this.tuffGolemPattern == null) {
+            this.tuffGolemPattern = BlockPatternBuilder.start()
+                    .aisle("P", "^", "#")
+                    .where('P', BlockInWorld.hasState(PUMPKINS_PREDICATE))
+                    .where('^', BlockInWorld.hasState(state -> state.is(BlockTags.WOOL)))
+                    .where('#', BlockInWorld.hasState(/* method_72574 */ state -> state.is(Blocks.TUFF)))
+                    .build();
+        }
+
+        return this.tuffGolemPattern;
+    }
+
     @Inject(method="trySpawnGolem", at = @At( value = "HEAD"), cancellable = true)
     private void spawnTargetDummy(Level level, BlockPos topPos, CallbackInfo ci) {
         BlockState block = level.getBlockState(topPos);
         BlockPattern.BlockPatternMatch result3 = this.getTargetDummyPattern().find(level, topPos);
+        BlockPattern.BlockPatternMatch resultMatchesTuffGolem = this.getTuffGolemPattern().find(level, topPos);
+
+        if(resultMatchesTuffGolem != null){
+            TuffGolem tuffGolem = EntityTypeRegistry.TUFF_GOLEM.create(level, EntitySpawnReason.TRIGGERED);
+            if(tuffGolem!=null){
+                BlockState pumpkinState = resultMatchesTuffGolem.getBlock(0, 0, 0).getState();
+                Direction dir = pumpkinState.getValue(HorizontalDirectionalBlock.FACING);
+
+                tuffGolem.snapTo(topPos.getX(), topPos.getY(), topPos.getZ(), dir.toYRot(), 0.0F);
+                tuffGolem.faceDirection(dir);
+                tuffGolem.getEntityData().set(TuffGolem.DIRECTION_FACING, pumpkinState.getValue(CarvedPumpkinBlock.FACING));
+                tuffGolem.getEntityData().set(TuffGolem.ANCHOR_BLOCK_STATE, resultMatchesTuffGolem.getBlock(0, 3, 0).getState());
+                tuffGolem.getEntityData().set(TuffGolem.ANCHOR_BLOCK_POS, resultMatchesTuffGolem.getBlock(0, 3, 0).getPos());
+
+                spawnGolemInWorld(level, resultMatchesTuffGolem, tuffGolem, resultMatchesTuffGolem.getBlock(0, 2, 0).getPos());
+
+                if (block.is(Blocks.CARVED_PUMPKIN)) {
+                    tuffGolem.snapTo(resultMatchesTuffGolem.getBlock(0, 2, 0).getPos(), block.getValue(HorizontalDirectionalBlock.FACING).toYRot(),0);
+                }
+                ci.cancel();
+            }
+        }
+
         if (result3 != null) {
             TargetDummy targetDummy = EntityTypeRegistry.TARGET_DUMMY.create(level, EntitySpawnReason.TRIGGERED);
             if (targetDummy != null) {

@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.greenjab.nekomasfixed.NekomasFixed;
 import net.greenjab.nekomasfixed.registry.entity.*;
 import net.greenjab.nekomasfixed.registry.entity.Moobloom.Moobloom;
+import net.greenjab.nekomasfixed.registry.entity.TuffGolem.TuffGolem;
 import net.greenjab.nekomasfixed.registry.entity.WildFire.FireBomb;
 import net.greenjab.nekomasfixed.registry.entity.WildFire.WildfireEntity;
 import net.minecraft.core.Registry;
@@ -112,6 +113,10 @@ public class EntityTypeRegistry {
             EntityType.Builder.of(Drenched::new, MobCategory.MONSTER)
                     .sized(0.6f, 1.99f).notInPeaceful());
 
+    public static final EntityType<TuffGolem> TUFF_GOLEM = register("tuff_golem",
+            EntityType.Builder.of(TuffGolem::new, MobCategory.MISC)
+                    .sized(0.6f, 1.99f));
+
 
 
     private static <T extends Entity> EntityType<T> register(String id, EntityType.Builder<T> type) {
@@ -156,6 +161,7 @@ public class EntityTypeRegistry {
         FabricDefaultAttributeRegistry.register(DERELICT, Zombie.createAttributes());
         FabricDefaultAttributeRegistry.register(RIME, Zombie.createAttributes());
         FabricDefaultAttributeRegistry.register(DRENCHED, Drenched.createDrenchedAttributes());
+        FabricDefaultAttributeRegistry.register(TUFF_GOLEM, TuffGolem.createAttributes());
     }
 
     public static void init() {}

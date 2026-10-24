@@ -82,6 +82,7 @@ public class ModModelLayerRegistry {
     public static final ModelLayerLocation FLOWER_CROWN = register("flower_crown", "main");
     public static final ModelLayerLocation GOAT_HORN_HELMET = register("goat_horn_helmet", "main");
 	public static final ModelLayerLocation GOAT_HORN_HELMET_TRIM = register("goat_horn_helmet", "trim");
+	public static final ModelLayerLocation TUFF_GOLEM = register("tuff_golem");
 
     private static ModelLayerLocation register(final String model) {
         return register(model, "main");
@@ -104,7 +105,9 @@ public class ModModelLayerRegistry {
         ModelLayerRegistry.registerModelLayer(ModModelLayerRegistry.MOOBLOOM_BABY, BabyMoobloomModel::getTexturedModelData);
         ModelLayerRegistry.registerModelLayer(ModModelLayerRegistry.SUSPICIOUS_SPIDER, SuspiciousSpiderModel::getTexturedModelData);
         ModelLayerRegistry.registerModelLayer(ModModelLayerRegistry.DRENCHED, DrenchedModel::getTexturedModelData);
-        
+
+        ModelLayerRegistry.registerModelLayer(ModModelLayerRegistry.TUFF_GOLEM, TuffGolemModel::getTexturedModelData);
+
         ArmorModelSet<LayerDefinition> humanoidArmor = HumanoidModel.createArmorMeshSet(new CubeDeformation(0.5F), new CubeDeformation(1.0F))
                 .map( mesh -> LayerDefinition.create(mesh, 64, 32));
         ArmorModelSet<LayerDefinition> humanoidBabyArmor = HumanoidModel.createBabyArmorMeshSet(
