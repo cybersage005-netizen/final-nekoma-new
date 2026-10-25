@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "nekomasfixed:block/brown_spotted_wool",
-    "side": "nekomasfixed:block/brown_spotted_wool",
-    "top": "nekomasfixed:block/brown_spotted_wool"
-  }
-}

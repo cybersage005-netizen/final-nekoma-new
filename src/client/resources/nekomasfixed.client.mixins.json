@@ -27,7 +27,11 @@
     "ShulkerBoxRendererMixin",
     "ShulkerBoxRenderStateMixin",
     "SpecialModelRenderersMixin",
-    "TextFeatureRendererMixin"
+    "TextFeatureRendererMixin",
+    "ItemInHandRendererMixin",
+    "ItemTintSourcesMixin",
+    "MinecartModelMixin",
+    "AtlasManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -37,7 +41,7 @@
     "IllagerModelMixin",
     "LivingEntityRendererMixin",
     "LootItemConditionTypesMixin",
-
+    "PauseScreenMixin",
     "LivingEntityRendererMixin",
     "SmithingScreenMixin"
   ]

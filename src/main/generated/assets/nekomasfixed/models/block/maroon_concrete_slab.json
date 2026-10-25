@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "nekomasfixed:block/maroon_concrete",
-    "side": "nekomasfixed:block/maroon_concrete",
-    "top": "nekomasfixed:block/maroon_concrete"
-  }
-}

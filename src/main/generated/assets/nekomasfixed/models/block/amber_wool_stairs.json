@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "nekomasfixed:block/amber_wool",
-    "side": "nekomasfixed:block/amber_wool",
-    "top": "nekomasfixed:block/amber_wool"
-  }
-}

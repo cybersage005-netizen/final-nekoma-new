@@ -1,18 +1,26 @@
 package net.greenjab.nekomasfixed.registry.registries;
 
+import net.fabricmc.fabric.api.client.model.loading.v1.BlockStateResolver;
 import net.greenjab.nekomasfixed.NekomasFixed;
 import net.greenjab.nekomasfixed.registry.item.*;
+import net.greenjab.nekomasfixed.registry.item.quiver.QuiverContents;
+import net.greenjab.nekomasfixed.registry.item.quiver.QuiverItem;
 import net.greenjab.nekomasfixed.registry.other.AnimalComponent;
+import net.greenjab.nekomasfixed.registry.other.PotEngravingDecoration;
+import net.greenjab.nekomasfixed.registry.other.PotFaceDecoration;
+import net.greenjab.nekomasfixed.registry.other.TippedArrowCustomComponent;
 import net.greenjab.nekomasfixed.registry.other.ModCushionComponents;
 import net.greenjab.nekomasfixed.util.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
@@ -25,6 +33,12 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.BlocksAttacks;
+import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.component.Weapon;
+import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.component.*;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.equipment.ArmorMaterial;
@@ -32,6 +46,11 @@ import net.minecraft.world.item.equipment.ArmorMaterials;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
+import net.minecraft.world.level.block.entity.PotDecorations;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import net.minecraft.world.waypoints.Waypoint;
 import java.util.List;
@@ -309,10 +328,10 @@ public class ItemRegistry {
     public static final Item INDIGO_HARNESS = register("indigo_harness",(new Item.Properties()).stacksTo(1).component(DataComponents.EQUIPPABLE,HarnessHelper.ofHarness(ModColors.INDIGO)));
     public static final Item MAROON_HARNESS = register("maroon_harness",(new Item.Properties()).stacksTo(1).component(DataComponents.EQUIPPABLE,HarnessHelper.ofHarness(ModColors.MAROON)));
 
-    public static final Item AMBER_DYE = registerDye("amber_dye");
-    public static final Item AQUA_DYE = registerDye("aqua_dye");
-    public static final Item INDIGO_DYE = registerDye("indigo_dye");
-    public static final Item MAROON_DYE = registerDye("maroon_dye");
+    public static final Item AMBER_DYE = registerDye("amber_dye", BlockRegistry.customDye("amber"));
+    public static final Item AQUA_DYE = registerDye("aqua_dye", BlockRegistry.customDye("aqua"));
+    public static final Item INDIGO_DYE = registerDye("indigo_dye", BlockRegistry.customDye("indigo"));
+    public static final Item MAROON_DYE = registerDye("maroon_dye", BlockRegistry.customDye("maroon"));
 
 
     public static final Item WHITE_DYED_BRUSH = register("white_dyed_brush", (settings) -> new DyedBrushItem(AllDyes.WHITE, settings), new Item.Properties().stacksTo(1).durability(64));
@@ -481,6 +500,19 @@ public class ItemRegistry {
     public static final Item INDIGO_SPOTTED_CARPET = register(BlockRegistry.INDIGO_SPOTTED_CARPET);
     public static final Item MAROON_SPOTTED_CARPET = register(BlockRegistry.MAROON_SPOTTED_CARPET);
 
+    public static final Item TERRACOTTA_DECORATED_POT = register(BlockRegistry.TERRACOTTA_DECORATED_POT, BlockItem::new, new Item.Properties()
+            .component(ComponentRegistry.POT_ENGRAVED_DECORATIONS, PotEngravingDecoration.EMPTY)
+            .component(ComponentRegistry.POT_FACE_BLOCK, PotFaceDecoration.FALLBACK_BRICKS)
+            .component(DataComponents.POT_DECORATIONS, PotDecorations.EMPTY)
+    );
+
+    public static final Item SULFUR_LANTERN =register(BlockRegistry.SULFUR_LANTERN);
+    public static final Item SULFUR_CAMPFIRE =register(BlockRegistry.SULFUR_CAMPFIRE);
+    public static final Item GOLD_CHAIN =register(BlockRegistry.GOLD_CHAIN);
+    public static final Item SULFUR_TORCH = register(BlockRegistry.SULFUR_TORCH, ((block, settings) ->
+            new StandingAndWallBlockItem(block, BlockRegistry.WALL_SULFUR_TORCH, Direction.DOWN, settings)));
+    public static final Item TIPPED_ARROW_CUSTOM = register("tipped_arrow_custom", CustomArrowItem::new, (new Item.Properties()).stacksTo(64).component(ComponentRegistry.TIPPED_POTION_CONTENTS, TippedArrowCustomComponent.EMPTY));
+
     public static final Item GHOST_PEPPER = register("ghost_pepper", properties -> new BlockItem(BlockRegistry.GHOST_PEPPER_SHRUB, properties.useItemDescriptionPrefix()), new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).build()).component(DataComponents.CONSUMABLE, Consumables.defaultFood().onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(EffectRegistry.SPICY, 200, 0), 1.0f)).build()));
     public static final Holder<Potion> SPICY = register("spicy", new Potion("spicy", new MobEffectInstance(EffectRegistry.SPICY, 200)));
 
@@ -500,6 +532,13 @@ public class ItemRegistry {
     public static final Item DANDELION_FLOWER_CROWN = registerFlowerCrown("dandelion_flower_crown", FlowerCrownVariants.DANDELION);
     public static final Item OPEN_EYEBLOSSOM_FLOWER_CROWN = registerFlowerCrown("open_eyeblossom_flower_crown", FlowerCrownVariants.OPEN_EYEBLOSSOM);
     public static final Item CLOSED_EYEBLOSSOM_FLOWER_CROWN = registerFlowerCrown("closed_eyeblossom_flower_crown", FlowerCrownVariants.CLOSED_EYEBLOSSOM);
+
+    public static final Item QUIVER =register("quiver", QuiverItem::new,
+            (new Item.Properties()).stacksTo(1).component(ComponentRegistry.QUIVER_CONTENTS, QuiverContents.EMPTY));
+    public static final Item AMBER_BANNER = register("amber_banner", (p)->new BannerItem(BlockRegistry.AMBER_BANNER, BlockRegistry.AMBER_WALL_BANNER, p), new Item.Properties().stacksTo(16).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
+    public static final Item AQUA_BANNER = register("aqua_banner", (p)->new BannerItem(BlockRegistry.AQUA_BANNER, BlockRegistry.AQUA_WALL_BANNER, p), new Item.Properties().stacksTo(16).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
+    public static final Item MAROON_BANNER = register("maroon_banner", (p)->new BannerItem(BlockRegistry.MAROON_BANNER, BlockRegistry.MAROON_WALL_BANNER, p), new Item.Properties().stacksTo(16).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
+    public static final Item INDIGO_BANNER = register("indigo_banner", (p)->new BannerItem(BlockRegistry.INDIGO_BANNER, BlockRegistry.INDIGO_WALL_BANNER, p), new Item.Properties().stacksTo(16).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
 
     public static final Item AMBER_CUSHION = registerCushion("amber_cushion",  "amber");
     public static final Item AQUA_CUSHION = registerCushion("aqua_cushion",   "aqua");
@@ -568,13 +607,44 @@ public class ItemRegistry {
     public static final Item INDIGO_CONCRETE_SLAB = register(BlockRegistry.INDIGO_CONCRETE_SLAB);
     public static final Item MAROON_CONCRETE_SLAB = register(BlockRegistry.MAROON_CONCRETE_SLAB);
 
-
      public static final Item GOAT_HORN_IRON_HELMET = registerGoatHornHelm("goat_horn_iron_helmet", GoatHornHelmetTiers.IRON);
      public static final Item GOAT_HORN_GOLDEN_HELMET = registerGoatHornHelm("goat_horn_golden_helmet", GoatHornHelmetTiers.GOLDEN);
      public static final Item GOAT_HORN_COPPER_HELMET = registerGoatHornHelm("goat_horn_copper_helmet", GoatHornHelmetTiers.COPPER);
      public static final Item GOAT_HORN_DIAMOND_HELMET = registerGoatHornHelm("goat_horn_diamond_helmet", GoatHornHelmetTiers.DIAMOND);
      public static final Item GOAT_HORN_NETHERITE_HELMET = registerGoatHornHelm("goat_horn_netherite_helmet", GoatHornHelmetTiers.NETHERITE);
      public static final Item GOAT_HORN_TURTLE_HELMET = registerGoatHornHelm("goat_horn_turtle_helmet", GoatHornHelmetTiers.TURTLE);
+
+    public static final Item WHITE_PRISM = registerPrism(AllDyes.WHITE);
+    public static final Item LIGHT_GRAY_PRISM = registerPrism(AllDyes.LIGHT_GRAY);
+    public static final Item GRAY_PRISM = registerPrism(AllDyes.GRAY);
+    public static final Item BLACK_PRISM = registerPrism(AllDyes.BLACK);
+    public static final Item BROWN_PRISM = registerPrism(AllDyes.BROWN);
+    public static final Item RED_PRISM = registerPrism(AllDyes.RED);
+    public static final Item ORANGE_PRISM = registerPrism(AllDyes.ORANGE);
+    public static final Item YELLOW_PRISM = registerPrism(AllDyes.YELLOW);
+    public static final Item LIME_PRISM = registerPrism(AllDyes.LIME);
+    public static final Item GREEN_PRISM = registerPrism(AllDyes.GREEN);
+    public static final Item CYAN_PRISM = registerPrism(AllDyes.CYAN);
+    public static final Item LIGHT_BLUE_PRISM = registerPrism(AllDyes.LIGHT_BLUE);
+    public static final Item BLUE_PRISM = registerPrism(AllDyes.BLUE);
+    public static final Item PURPLE_PRISM = registerPrism(AllDyes.PURPLE);
+    public static final Item MAGENTA_PRISM = registerPrism(AllDyes.MAGENTA);
+    public static final Item PINK_PRISM = registerPrism(AllDyes.PINK);
+    public static final Item AMBER_PRISM = registerPrism(AllDyes.AMBER);
+    public static final Item AQUA_PRISM = registerPrism(AllDyes.AQUA);
+    public static final Item INDIGO_PRISM = registerPrism(AllDyes.INDIGO);
+    public static final Item MAROON_PRISM = registerPrism(AllDyes.MAROON);
+
+    public static final Item WATER_PRISM = registerTreasurePrism(TreasureGlints.WATER);
+    public static final Item FIRE_PRISM = registerTreasurePrism(TreasureGlints.FIRE);
+    public static final Item ENDER_PRISM = registerTreasurePrism(TreasureGlints.ENDER);
+    public static final Item RAINBOW_PRISM = registerTreasurePrism(TreasureGlints.RAINBOW);
+    public static final Item FROSTFIRE_PRISM = registerTreasurePrism(TreasureGlints.FROSTFIRE);
+    public static final Item JUNGLE_PRISM = registerTreasurePrism(TreasureGlints.JUNGLE);
+    public static final Item VOID_PRISM = registerTreasurePrism(TreasureGlints.VOID);
+    public static final Item SKY_PRISM = registerTreasurePrism(TreasureGlints.SKY);
+    public static final Item ANCIENT_PRISM = registerTreasurePrism(TreasureGlints.ANCIENT);
+    public static final Item SCULK_PRISM = registerTreasurePrism(TreasureGlints.SCULK);
 
     public static Item register(String id, Item.Properties settings) {
         return register(keyOf(id), Item::new, settings);
@@ -592,6 +662,14 @@ public class ItemRegistry {
             blockItem.registerBlocks(Item.BY_BLOCK, item);
         }
         return Registry.register(BuiltInRegistries.ITEM, key, item);
+    }
+
+    private static Item registerPrism(AllDyes dye) {
+        return register(dye.getSerializedName() + "_prism", props -> new Item(props.delayedComponent(ComponentRegistry.PROVIDES_GLINT, context -> context.getOrThrow(GlintColorRegistry.GLINT_COLORS.get(dye)))), new Item.Properties());
+    }
+
+    private static Item registerTreasurePrism(TreasureGlints glint) {
+        return register(glint.getSerializedName() + "_prism", props -> new Item(props.delayedComponent(ComponentRegistry.PROVIDES_GLINT, context -> context.getOrThrow(GlintColorRegistry.TREASURE_GLINTS.get(glint)))), new Item.Properties().rarity(Rarity.EPIC));
     }
 
     private static Item registerCushion(String id, String modColor) {
@@ -632,9 +710,10 @@ public class ItemRegistry {
     public static Item register(Block block, BiFunction<Block, Item.Properties, Item> factory) {
         return register(block, factory, new Item.Properties());
     }
-    public static DyeItem registerDye(String id) {
-        return (DyeItem) register(keyOf(id), ModDyeItems::new, new Item.Properties());
+    public static DyeItem registerDye(String id, DyeColor color) {
+        return (DyeItem) register(keyOf(id), ModDyeItems::new,new Item.Properties().component(DataComponents.DYE, color));
     }
+
     public static void registerItems() {
         NekomasFixed.LOGGER.info("Registering items...");
 

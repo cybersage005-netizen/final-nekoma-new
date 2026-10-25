@@ -3,10 +3,25 @@ package net.greenjab.nekomasfixed.datagen;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.greenjab.nekomasfixed.registry.recipe.CustomTippedArrowRecipe;
+import net.greenjab.nekomasfixed.registry.registries.BlockRegistry;
 import net.greenjab.nekomasfixed.registry.registries.ItemRegistry;
+import net.greenjab.nekomasfixed.registry.registries.RecipeRegistry;
+import net.greenjab.nekomasfixed.util.AllDyes;
+import net.greenjab.nekomasfixed.util.BlockDyeMap;
+import net.greenjab.nekomasfixed.util.ItemDyeMap;
+import net.greenjab.nekomasfixed.util.ModTags;
 import net.greenjab.nekomasfixed.util.*;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.LootTableSubProvider;
+import net.minecraft.data.loot.packs.VanillaLootTableProvider;
+import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -19,7 +34,11 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import org.jspecify.annotations.NonNull;
@@ -43,10 +62,28 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         return new RecipeProvider(recipes, advancements) {
             @Override
             public void buildRecipes() {
+
+                SpecialRecipeBuilder.special(
+                                /* lambda$buildRecipes$24 */ () -> new DecoratedPotRecipe(this.tag(ItemTags.DECORATED_POT_INGREDIENTS), new ItemStackTemplate(ItemRegistry.TERRACOTTA_DECORATED_POT))
+                        )
+                        .save(this.output, "terracotta_decorated_pot");
+
                 shapeless(RecipeCategory.BUILDING_BLOCKS, ItemRegistry.BAOBAB_PLANKS, 4)
                         .requires(ModTags.BAOBAB_LOGS)
                         .unlockedBy(getHasName(ItemRegistry.BAOBAB_LOG), has(ItemRegistry.BAOBAB_LOG))
                         .save(output);
+
+                shaped(RecipeCategory.DECORATIONS, BlockRegistry.SULFUR_CAMPFIRE)
+                        .define('L', ItemTags.LOGS)
+                        .define('S', Items.STICK)
+                        .define('C', Items.SULFUR)
+                        .pattern(" S ")
+                        .pattern("SCS")
+                        .pattern("LLL")
+                        .unlockedBy("has_stick", this.has(Items.STICK))
+                        .unlockedBy("has_sulfur", this.has(Items.SULFUR))
+                        .save(this.output);
+
 
                 shaped(RecipeCategory.BUILDING_BLOCKS, ItemRegistry.BAOBAB_WOOD, 3)
                         .pattern("##")
@@ -61,6 +98,36 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .define('#', ItemRegistry.STRIPPED_BAOBAB_LOG)
                         .unlockedBy(getHasName(ItemRegistry.STRIPPED_BAOBAB_LOG), has(ItemRegistry.STRIPPED_BAOBAB_LOG))
                         .save(output);
+
+                shaped(RecipeCategory.DECORATIONS, ItemRegistry.SULFUR_LANTERN, 1)
+                        .pattern("III")
+                        .pattern("ITI")
+                        .pattern("III")
+                        .define('I', Items.GOLD_NUGGET)
+                        .define('T', Items.SULFUR)
+                        .unlockedBy(getHasName(Items.GOLD_NUGGET), has(Items.GOLD_NUGGET))
+                        .unlockedBy(getHasName(Items.SULFUR), has(Items.SULFUR))
+                        .save(output);
+
+                shaped(RecipeCategory.DECORATIONS, ItemRegistry.GOLD_CHAIN, 4)
+                        .pattern("#")
+                        .pattern("T")
+                        .pattern("#")
+                        .define('#', Items.GOLD_NUGGET)
+                        .define('T', Items.GOLD_INGOT)
+                        .unlockedBy(getHasName(Items.GOLD_NUGGET), has(Items.GOLD_NUGGET))
+                        .unlockedBy(getHasName(Items.GOLD_INGOT), has(Items.GOLD_INGOT))
+                        .save(output);
+
+                CustomCraftingRecipeBuilder.customCrafting(RecipeCategory.MISC, (commonInfo, bookInfo) -> new CustomTippedArrowRecipe(commonInfo, bookInfo, Ingredient.of(Items.ARROW), this.tag(ModTags.POTIONS), new ItemStackTemplate(ItemRegistry.TIPPED_ARROW_CUSTOM)))
+                        .unlockedBy("has_arrow", this.has(Items.ARROW))
+                        .unlockedBy("has_potion", this.has(Items.POTION))
+                        .save(output, RecipeRegistry.CUSTOM_TIPPED_ARROW_RECIPE.toString());
+
+                createBannerRecipe(ItemRegistry.AMBER_BANNER, ItemRegistry.AMBER_WOOL).save(output);
+                createBannerRecipe(ItemRegistry.AQUA_BANNER, ItemRegistry.AQUA_WOOL).save(output);
+                createBannerRecipe(ItemRegistry.MAROON_BANNER, ItemRegistry.MAROON_WOOL).save(output);
+                createBannerRecipe(ItemRegistry.INDIGO_BANNER, ItemRegistry.INDIGO_WOOL).save(output);
 
                 woodenBoat(ItemRegistry.BAOBAB_BOAT, ItemRegistry.BAOBAB_PLANKS);
                 chestBoat(ItemRegistry.BAOBAB_CHEST_BOAT, ItemRegistry.BAOBAB_PLANKS);
@@ -171,6 +238,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                             .save(output, recipeKey(BuiltInRegistries.ITEM.getKey(hollow.getFirst()).getPath() + "_from_hollow_log"));
                 }
 
+
                 shaped(RecipeCategory.TOOLS, ItemRegistry.REDSTONE_STRIKER, 1)
                         .pattern("RG")
                         .pattern("FR")
@@ -183,6 +251,15 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .save(output);
                 ArrayList<Item> spotted_wool_slabs = new ArrayList<>();
                 ArrayList<Item> spotted_wool_stairs = new ArrayList<>();
+
+                shaped(RecipeCategory.DECORATIONS, ItemRegistry.SULFUR_TORCH, 4)
+                        .pattern("S")
+                        .pattern("T")
+                        .define('S', Items.SULFUR)
+                        .define('T', Items.STICK)
+                        .unlockedBy(getHasName(Items.SULFUR), has(Items.SULFUR))
+                        .unlockedBy(getHasName(Items.STICK), has(Items.STICK))
+                        .save(output);
 
                 for (AllDyes colour : AllDyes.values()) {
                     Item wool = BlockDyeMap.SPOTTED_WOOL.get(colour).asItem();
@@ -288,6 +365,69 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                             .unlockedBy(getHasName(flower), has(flower))
                             .save(output);
                 }
+                shaped(RecipeCategory.MISC, ItemRegistry.SLINGSHOT, 1)
+                        .pattern(" X")
+                        .pattern("#$")
+                        .define('#', Items.STICK)
+                        .define('X', Items.STRING)
+                        .define('$', Items.LEATHER)
+                        .unlockedBy("has_string", has(Items.STRING))
+                        .save(output);
+
+                for (AllDyes colour : AllDyes.values()) {
+                    Item dye = switch (colour) {
+                        case WHITE -> Items.DYE.white();
+                        case ORANGE -> Items.DYE.orange();
+                        case MAGENTA -> Items.DYE.magenta();
+                        case LIGHT_BLUE -> Items.DYE.lightBlue();
+                        case YELLOW -> Items.DYE.yellow();
+                        case LIME -> Items.DYE.lime();
+                        case PINK -> Items.DYE.pink();
+                        case GRAY -> Items.DYE.gray();
+                        case LIGHT_GRAY -> Items.DYE.lightGray();
+                        case CYAN -> Items.DYE.cyan();
+                        case PURPLE -> Items.DYE.purple();
+                        case BLUE -> Items.DYE.blue();
+                        case BROWN -> Items.DYE.brown();
+                        case GREEN -> Items.DYE.green();
+                        case RED -> Items.DYE.red();
+                        case BLACK -> Items.DYE.black();
+                        case AMBER, AQUA, INDIGO, MAROON -> ItemDyeMap.DYE.get(colour);
+                    };
+                    Item prism = switch (colour) {
+                        case WHITE -> ItemRegistry.WHITE_PRISM;
+                        case ORANGE -> ItemRegistry.ORANGE_PRISM;
+                        case MAGENTA -> ItemRegistry.MAGENTA_PRISM;
+                        case LIGHT_BLUE -> ItemRegistry.LIGHT_BLUE_PRISM;
+                        case YELLOW -> ItemRegistry.YELLOW_PRISM;
+                        case LIME -> ItemRegistry.LIME_PRISM;
+                        case PINK -> ItemRegistry.PINK_PRISM;
+                        case GRAY -> ItemRegistry.GRAY_PRISM;
+                        case LIGHT_GRAY -> ItemRegistry.LIGHT_GRAY_PRISM;
+                        case CYAN -> ItemRegistry.CYAN_PRISM;
+                        case PURPLE -> ItemRegistry.PURPLE_PRISM;
+                        case BLUE -> ItemRegistry.BLUE_PRISM;
+                        case BROWN -> ItemRegistry.BROWN_PRISM;
+                        case GREEN -> ItemRegistry.GREEN_PRISM;
+                        case RED -> ItemRegistry.RED_PRISM;
+                        case BLACK -> ItemRegistry.BLACK_PRISM;
+                        case AMBER -> ItemRegistry.AMBER_PRISM;
+                        case AQUA -> ItemRegistry.AQUA_PRISM;
+                        case INDIGO -> ItemRegistry.INDIGO_PRISM;
+                        case MAROON -> ItemRegistry.MAROON_PRISM;
+                    };
+
+                    shaped(RecipeCategory.BUILDING_BLOCKS, prism, 1)
+                            .pattern("AAA")
+                            .pattern("ADA")
+                            .pattern("AAA")
+                            .define('A', Items.AMETHYST_SHARD)
+                            .define('D', dye)
+                            .group("prism")
+                            .unlockedBy(getHasName(Items.AMETHYST_SHARD), has(Items.AMETHYST_SHARD))
+                            .unlockedBy(getHasName(dye), has(dye))
+                            .save(output);
+                }
             }
 
             private ShapedRecipeBuilder createRingRecipe(RecipeCategory category, Item outside, Item inside, Item result, String group, int num) {
@@ -310,6 +450,18 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .group("goat_horn")
                         .unlockedBy(getHasName(Items.GOAT_HORN), has(Items.GOAT_HORN))
                         .unlockedBy(getHasName(helmet), has(helmet));
+            }
+
+            private ShapedRecipeBuilder createBannerRecipe(Item bannerItem, Item woolItem){
+               return shaped(RecipeCategory.DECORATIONS, bannerItem, 1)
+                        .pattern("###")
+                        .pattern("###")
+                        .pattern(" S ")
+                        .define('#', woolItem)
+                        .define('S', Items.STICK)
+                        .unlockedBy(getHasName(woolItem), has(woolItem))
+                        .unlockedBy(getHasName(Items.STICK), has(Items.STICK))
+                        ;
             }
         };
     }

@@ -1,6 +1,9 @@
 package net.greenjab.nekomasfixed.registry.registries;
 
+import net.greenjab.nekomasfixed.registry.other.PotEngravingDecoration;
+import net.greenjab.nekomasfixed.registry.item.quiver.QuiverContents;
 import net.greenjab.nekomasfixed.registry.other.*;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,6 +28,24 @@ public class ComponentRegistry {
 
     public static final DataComponentType<ComboComponent> COMBO_MULTIPLIER = registerComponent(
             "combo_multiplier", builder -> builder.persistent(ComboComponent.CODEC).networkSynchronized(ComboComponent.PACKET_CODEC).cacheEncoding());
+
+    public static final DataComponentType<QuiverContents> QUIVER_CONTENTS = registerComponent(
+            "quiver_contents", (b) -> b.persistent(QuiverContents.CODEC).networkSynchronized(QuiverContents.STREAM_CODEC).cacheEncoding());
+
+    public static final DataComponentType<TippedArrowCustomComponent> TIPPED_POTION_CONTENTS = registerComponent(
+            "tipped_potion_contents", (b) -> b.persistent(TippedArrowCustomComponent.CODEC).networkSynchronized(TippedArrowCustomComponent.STREAM_CODEC).cacheEncoding());
+
+    public static final DataComponentType<PotEngravingDecoration> POT_ENGRAVED_DECORATIONS = registerComponent(
+            "pot_engraved_decorations", (b) -> b.persistent(PotEngravingDecoration.CODEC).networkSynchronized(PotEngravingDecoration.STREAM_CODEC).cacheEncoding());
+
+    public static final DataComponentType<PotFaceDecoration> POT_FACE_BLOCK = registerComponent(
+            "pot_face_block", (b) -> b.persistent(PotFaceDecoration.CODEC).networkSynchronized(PotFaceDecoration.STREAM_CODEC).cacheEncoding());
+
+    public static final DataComponentType<Holder<GlintColor>> PROVIDES_GLINT = registerComponent(
+            "provides_glint", builder -> builder.persistent(GlintColor.CODEC).networkSynchronized(GlintColor.STREAM_CODEC).cacheEncoding());
+
+    public static final DataComponentType<ArmorGlint> ARMOR_GLINT = registerComponent(
+            "armor_glint", builder -> builder.persistent(ArmorGlint.CODEC).networkSynchronized(ArmorGlint.STREAM_CODEC).cacheEncoding());
 
     private static <T> DataComponentType<T> registerComponent(String id, UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
         return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id, builderOperator.apply(DataComponentType.builder()).build());}

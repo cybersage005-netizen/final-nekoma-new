@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "bottom": "nekomasfixed:block/pink_spotted_wool",
-    "side": "nekomasfixed:block/pink_spotted_wool",
-    "top": "nekomasfixed:block/pink_spotted_wool"
-  }
-}
